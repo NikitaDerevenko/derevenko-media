@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Inter Tight со своего сервера: только латиница и кириллица (вариативный, 400–700)
+ * + отдельный файл на 1 КБ для знака ₽. Через Google Fonts ₽ тянул latin-ext на 90 КБ.
+ * Файлы латиницы и кириллицы предзагружаются в app/[locale]/layout.tsx.
+ */
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-tight-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-tight-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Inter Tight';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-tight-rub.woff2') format('woff2');
+  unicode-range: U+20BD;
+}
+/* Подогнанный системный шрифт на время загрузки — без скачка вёрстки */
+@font-face {
+  font-family: 'Inter Tight Fallback';
+  src: local('Arial');
+  ascent-override: 100.51%;
+  descent-override: 25.03%;
+  line-gap-override: 0%;
+  size-adjust: 96.39%;
+}
+
+/*
+ * Палитра — единственное место, где заданы цвета. Значения — RGB-тройки для Tailwind (rgb(var(--x) / alpha)).
+ * Контраст: --muted на --bg ≈ 5.0:1, на --surface ≈ 5.5:1; --dark-muted на --dark-2 ≈ 7:1.
+ */
+:root {
+  color-scheme: light;
+  --font-sans: 'Inter Tight', 'Inter Tight Fallback';
+
+  --bg: 243 239 231; /* #F3EFE7 — тёплый «бумажный» фон */
+  --surface: 251 249 244; /* #FBF9F4 — карточки и поля */
+  --line: 230 224 212; /* #E6E0D4 — тонкие границы */
+  --ink: 22 20 18; /* #161412 — основной текст */
+  --muted: 107 101 92; /* #6B655C — вторичный текст */
+
+  --accent: 91 43 242; /* #5B2BF2 — единственный акцент */
+  --accent-dark: 63 23 201;
+  --accent-soft: 236 230 255;
+  --on-accent: 255 255 255;
+
+  --dark: 20 20 22; /* #141416 — тёмные секции */
+  --dark-2: 28 28 32; /* #1C1C20 — карточки в тёмных секциях */
+  --dark-line: 42 42 48; /* #2A2A30 */
+  --dark-muted: 168 166 176;
+
+  --lime: 212 255 58; /* #D4FF3A — только маркер внутри тёмных блоков */
+
+  --device: 27 28 32; /* корпус телефона и рамка ноутбука */
+  --device-body: 196 198 204;
+  --device-edge: 158 160 168;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+body {
+  @apply bg-bg font-sans text-base text-ink antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgb(var(--accent) / 0.2);
+}
+
+/* Якоря секций не прячутся под шапкой */
+[id] {
+  scroll-margin-top: 88px;
+}
+
+@layer components {
+  /* Метка капсом с разрядкой — минимум 13px */
+  .caps {
+    @apply text-[13px] font-semibold uppercase tracking-caps;
+  }
+  /* Огромный заголовок секции */
+  .display {
+    @apply font-semibold uppercase leading-[0.92] tracking-[-0.01em];
+  }
+  /* Крупные слова направлений на первом экране: не вылезают за блок даже на 320px */
+  .big-words-box {
+    container-type: inline-size;
+  }
+  .big-words {
+    @apply font-semibold uppercase leading-[0.9] tracking-[-0.01em];
+    /* размер от ширины своей колонки: самое длинное слово (8 букв) всегда помещается */
+    font-size: clamp(36px, 15.5cqi, 140px);
+    overflow-wrap: anywhere;
+  }
+  .card {
+    @apply rounded-[24px] border border-line bg-surface;
+  }
+  .card-dark {
+    @apply rounded-[24px] border border-dark-line bg-dark-2;
+  }
+}
+
+/*
+ * Секции ниже первого экрана не раскладываются, пока не приблизятся к экрану — быстрее первая загрузка.
+ * Перед переходом по якорю скрипт в <head> вешает .cv-off и все секции раскладываются,
+ * иначе браузер считает позицию по заглушкам и не доводит до нужного блока.
+ */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+.cv-off .cv-auto {
+  content-visibility: visible;
+}
+
+/* Тёмный «витринный» блок: сетка как на чертеже */
+.grid-bg {
+  background-color: rgb(var(--dark));
+  background-image:
+    linear-gradient(rgb(var(--on-accent) / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--on-accent) / 0.04) 1px, transparent 1px);
+  background-size: 112px 112px;
+  background-position: -1px -1px;
+}
+
+/* Глянцевая сфера — объёмный акцент в цвете --accent */
+.sphere {
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at 32% 28%, rgb(var(--on-accent) / 0.95) 0 6%, rgb(var(--on-accent) / 0) 22%),
+    radial-gradient(circle at 70% 78%, rgb(var(--accent-soft) / 0.6), transparent 55%),
+    radial-gradient(circle at 50% 50%, rgb(var(--accent)) 0%, rgb(var(--accent-dark)) 60%, rgb(var(--dark)) 120%);
+  box-shadow:
+    inset -12px -16px 30px rgb(var(--dark) / 0.45),
+    0 30px 50px -20px rgb(var(--accent) / 0.6);
+}
+
+/* Слайдер до/после: без JS — два изображения рядом */
+.ba-slider {
+  display: none;
+}
+.js .ba-slider {
+  display: block;
+}
+.js .ba-fallback {
+  display: none;
+}
+
+.has-consent .cookie-banner {
+  display: none;
+}
+
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* Обложка главного кейса — «свет свечей». Тёплые тона допустимы: это изображение кейса, не интерфейс. */
+.candle-cover {
+  background:
+    radial-gradient(60% 55% at 78% 30%, rgba(245, 176, 74, 0.55), transparent 70%),
+    radial-gradient(35% 40% at 18% 85%, rgba(232, 89, 12, 0.35), transparent 70%),
+    radial-gradient(25% 30% at 50% 60%, rgba(255, 214, 140, 0.18), transparent 70%),
+    linear-gradient(160deg, #1e1a16 0%, #120f0c 60%, #0b0907 100%);
+}
+.candle-warm {
+  color: rgba(245, 176, 74, 0.92);
+}
+.candle-flame {
+  background: linear-gradient(to top, #e8590c, #f5b04a, #fff8e8);
+  box-shadow: 0 0 40px 14px rgba(245, 176, 74, 0.45);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Поля формы */
+.field {
+  @apply w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-ink outline-none transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/20;
+}
+.field-dark {
+  @apply w-full rounded-xl border border-dark-line bg-dark px-4 py-3 text-base text-onaccent outline-none transition placeholder:text-dark-muted focus:border-accent focus:ring-2 focus:ring-accent/30;
+}

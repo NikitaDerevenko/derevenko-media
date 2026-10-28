@@ -1,0 +1,23 @@
+# зависимости и сборка
+node_modules
+.next
+out
+*.tsbuildinfo
+next-env.d.ts
+
+# секреты: токены задаются в настройках хостинга
+.env
+.env.local
+.env.*.local
+
+# рабочие материалы, на сайт не нужны (исходники фото — в «Медиа», картинки сайта — в public/)
+Медиа/
+report/
+lighthouse/
+.playwright-mcp/
+.claude/
+portfolio_pack.zip
+PROMPT_*.md
+
+# заявки, если LEADS_STORE_FILE указывает внутрь проекта
+data/
