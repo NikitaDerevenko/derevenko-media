@@ -2,10 +2,12 @@ import type { Metadata } from 'next';
 import { LegalPage, legalMetadata } from '@/components/legal-page';
 import type { Locale } from '@/lib/site';
 
-export function generateMetadata({ params }: { params: { locale: Locale } }): Metadata {
+export async function generateMetadata({ params: paramsP }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+  const params = await paramsP;
   return legalMetadata('terms', params.locale);
 }
 
-export default function TermsPage({ params }: { params: { locale: Locale } }) {
+export default async function TermsPage({ params: paramsP }: { params: Promise<{ locale: Locale }> }) {
+  const params = await paramsP;
   return <LegalPage id="terms" locale={params.locale} />;
 }

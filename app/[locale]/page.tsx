@@ -28,7 +28,8 @@ const SLIDES: Record<Locale, Omit<HeroSlide, 'title'>[]> = {
   ],
 };
 
-export default function HomePage({ params }: { params: { locale: Locale } }) {
+export default async function HomePage({ params: paramsP }: { params: Promise<{ locale: Locale }> }) {
+  const params = await paramsP;
   const { locale } = params;
   // в браузер уходят только заголовки слайдов, а не весь список кейсов
   const slides = SLIDES[locale].map((s) => ({ ...s, title: getProject(s.slug)?.title[locale] ?? '' }));

@@ -20,7 +20,8 @@ export function generateStaticParams() {
   return LOCALES.flatMap((locale) => PROJECTS.filter((p) => isVisible(p, locale)).map((p) => ({ locale, slug: p.slug })));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
+export async function generateMetadata({ params: paramsP }: { params: Promise<Params> }): Promise<Metadata> {
+  const params = await paramsP;
   const p = getProject(params.slug);
   if (!p) return {};
   const alt = LOCALES.filter((l) => isVisible(p, l));
@@ -36,7 +37,8 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
   };
 }
 
-export default function ProjectPage({ params }: { params: Params }) {
+export default async function ProjectPage({ params: paramsP }: { params: Promise<Params> }) {
+  const params = await paramsP;
   const { locale, slug } = params;
   const p = getProject(slug);
   if (!p || !isVisible(p, locale)) notFound();

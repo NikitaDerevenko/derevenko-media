@@ -36,7 +36,8 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
+export async function generateMetadata({ params: paramsP }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const params = await paramsP;
   if (!isLocale(params.locale)) return {};
   const dict = getDict(params.locale);
   return {
@@ -61,7 +62,8 @@ export function generateMetadata({ params }: { params: { locale: string } }): Me
   };
 }
 
-export default function LocaleLayout({ children, params }: { children: React.ReactNode; params: { locale: string } }) {
+export default async function LocaleLayout({ children, params: paramsP }: { children: React.ReactNode; params: Promise<{ locale: string }> }) {
+  const params = await paramsP;
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
   const dict = getDict(locale);

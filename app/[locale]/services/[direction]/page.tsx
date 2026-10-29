@@ -17,7 +17,8 @@ export function generateStaticParams() {
   return LOCALES.flatMap((locale) => DIRECTIONS.map((direction) => ({ locale, direction })));
 }
 
-export function generateMetadata({ params }: { params: Params }): Metadata {
+export async function generateMetadata({ params: paramsP }: { params: Promise<Params> }): Promise<Metadata> {
+  const params = await paramsP;
   if (!isDirection(params.direction)) return {};
   const page = getDict(params.locale).directions[params.direction].page;
   const path = `/services/${params.direction}`;
@@ -37,7 +38,8 @@ export function generateMetadata({ params }: { params: Params }): Metadata {
 /** В контактной форме — направление, выбранное по странице */
 const FORM_DIRECTION: Record<DirectionId, string> = { promotion: 'promotion', websites: 'websites', 'telegram-bots': 'telegram-bots', 'mini-apps': 'mini-apps' };
 
-export default function DirectionPage({ params }: { params: Params }) {
+export default async function DirectionPage({ params: paramsP }: { params: Promise<Params> }) {
+  const params = await paramsP;
   const { locale } = params;
   if (!isDirection(params.direction)) notFound();
   const direction = params.direction;

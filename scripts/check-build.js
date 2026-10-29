@@ -11,7 +11,8 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const p = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name === 'cache') continue;
+      // cache и build — служебные файлы сборщика (в build есть комментарий библиотеки source-map с example.com), на сайт они не попадают
+      if (entry.name === 'cache' || (dir === root && entry.name === 'build')) continue;
       walk(p);
     } else if (/\.(html|js|json|rsc|txt|xml|body|meta)$/.test(entry.name)) {
       if (fs.readFileSync(p, 'utf8').includes(needle)) hits.push(path.relative(root, p));
