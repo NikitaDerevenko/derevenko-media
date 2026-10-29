@@ -51,6 +51,7 @@ export const en: Dict = {
       drr: 'Ad cost share',
       note: '249 conversions. Figures from the ad account.',
       link: 'Read the case',
+      short: 'ad spend → goal revenue in analytics',
     },
     facts: ['In advertising since 2016', 'Contract and receipt for every payment', 'All accounts in your name', 'Stop any time, no penalties'],
   },

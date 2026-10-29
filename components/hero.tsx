@@ -28,6 +28,24 @@ export function Hero({ locale }: { locale: Locale }) {
           <h1 className="h1 max-w-[19ch]">{h.h1}</h1>
           <p className="mt-6 max-w-[56ch] text-[17px] leading-relaxed text-muted md:text-lg">{h.sub}</p>
 
+          {/* На телефоне большая карточка с цифрами не помещается в первый экран — показываем её суть одной строкой */}
+          <Link
+            prefetch={false}
+            href={`${home}/projects/${PROOF.slug}`}
+            className="mt-6 flex items-center justify-between gap-4 rounded-xl bg-accent-soft px-4 py-3 lg:hidden"
+          >
+            <span className="min-w-0">
+              <span className="block text-[13px] leading-tight text-ink/70">{h.proof.label}</span>
+              <span className="mt-1 block text-[15px] font-semibold leading-snug">
+                {rub(PROOF.spend)} <span className="font-normal text-ink/70">→</span> <span className="text-accent">{rub(PROOF.revenue)}</span>
+              </span>
+              <span className="block text-[13px] leading-tight text-ink/70">
+                {h.proof.short}
+              </span>
+            </span>
+            <Arrow className="h-4 w-4 shrink-0 text-accent" />
+          </Link>
+
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a href={`${home}#start`} className={btn.primary}>
               {h.ctaPrimary}
@@ -59,7 +77,7 @@ export function Hero({ locale }: { locale: Locale }) {
         </div>
 
         {/* Карточка-доказательство: расход против дохода, как в отчёте */}
-        <figure className="rounded-2xl border border-line bg-bg p-6 shadow-soft md:p-8">
+        <figure className="hidden rounded-2xl border border-line bg-bg p-6 shadow-soft md:p-8 lg:block">
           <figcaption>
             <span className="block text-[15px] font-medium text-muted">{h.proof.label}</span>
             <span className="mt-1 block text-[20px] font-semibold tracking-[-0.01em]">{h.proof.channel}</span>
