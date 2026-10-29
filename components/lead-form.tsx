@@ -89,7 +89,7 @@ export function LeadForm({ variant, defaultDirection }: { variant: Variant; defa
 
   if (status === 'success') {
     return (
-      <div role="status" className="flex flex-col items-start justify-center rounded-[20px] border border-line bg-bg p-7">
+      <div role="status" className="flex flex-col items-start justify-center rounded-2xl border border-line bg-bg p-7">
         <span className="grid h-12 w-12 place-items-center rounded-full bg-accent text-onaccent">
           <Check className="h-6 w-6" />
         </span>
@@ -113,7 +113,7 @@ export function LeadForm({ variant, defaultDirection }: { variant: Variant; defa
     'aria-describedby': errors[f] ? `${uid}-${f}-err` : undefined,
   });
   const fieldCls = (f?: Field) => cx('field', f && errors[f] && 'border-accent');
-  const labelCls = 'caps mb-2 block text-muted';
+  const labelCls = 'mb-2 block text-[14px] font-medium text-ink';
 
   return (
     <form noValidate onSubmit={onSubmit} className="relative flex flex-col gap-5">

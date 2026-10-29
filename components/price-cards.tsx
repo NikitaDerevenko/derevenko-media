@@ -1,7 +1,7 @@
 import { fill, getDict } from '@/lib/i18n';
 import { packagePrice, servicePrice } from '@/lib/pricing';
 import { DIRECTION_SERVICES, formatMoney, marketOf, RECOMMENDED_PACKAGE, SERVICES, type DirectionId, type Locale, type PackageId, type ServiceId } from '@/lib/site';
-import { Arrow, btn, Check, cx } from './ui';
+import { btn, Check, cx } from './ui';
 
 type CardData = {
   key: string;
@@ -21,20 +21,21 @@ function PriceCard({ c, dark, termLabel, extraLabel }: { c: CardData; dark: bool
     <article
       id={c.key}
       className={cx(
-        'relative flex h-full flex-col rounded-[24px] border p-6 md:p-7',
-        dark ? 'bg-dark-2' : 'bg-surface',
+        'relative flex h-full flex-col rounded-2xl border p-6 md:p-7',
+        dark ? 'bg-dark-2' : 'bg-bg',
         c.highlight ? 'border-accent ring-1 ring-accent' : dark ? 'border-dark-line' : 'border-line',
       )}
     >
-      {c.highlight && <span className="absolute -top-3 left-6 rounded-full bg-accent px-3 py-1 text-[13px] font-bold uppercase tracking-caps text-onaccent">{c.highlight}</span>}
-      <p className={cx('caps', dark ? 'text-dark-muted' : 'text-muted')}>{c.label}</p>
-      <h3 className="mt-3 text-2xl font-semibold leading-tight">{c.name}</h3>
-      <p className="mt-4 text-3xl font-semibold tracking-tight">{c.price}</p>
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-[20px] font-semibold leading-tight">{c.name}</h3>
+        {c.highlight && <span className="shrink-0 rounded-md bg-accent-soft px-2 py-1 text-[13px] font-medium leading-tight text-accent-dark">{c.highlight}</span>}
+      </div>
+      <p className="mt-4 text-[28px] font-semibold leading-none tracking-[-0.02em]">{c.price}</p>
       <p className={cx('mt-2 min-h-[1.5rem] text-[14px]', dark ? 'text-dark-muted' : 'text-muted')}>{c.term ? `${termLabel}: ${c.term}` : ' '}</p>
-      <ul className={cx('mt-5 flex-1 space-y-2.5 border-t pt-5 text-[16px]', dark ? 'border-dark-line' : 'border-line')}>
+      <ul className={cx('mt-5 flex-1 space-y-2 border-t pt-5 text-[15px] leading-snug', dark ? 'border-dark-line' : 'border-line')}>
         {c.includes.map((i) => (
           <li key={i} className="flex gap-2.5">
-            <Check className={cx('mt-0.5 h-4 w-4', dark ? 'text-lime' : 'text-accent')} />
+            <Check className={cx('mt-1 h-4 w-4', dark ? 'text-lime' : 'text-accent')} />
             {i}
           </li>
         ))}
@@ -47,7 +48,6 @@ function PriceCard({ c, dark, termLabel, extraLabel }: { c: CardData; dark: bool
       )}
       <a href={c.cta.href} className={cx(c.highlight ? btn.primary : dark ? btn.secondaryDark : btn.secondary, 'mt-6 w-full')}>
         {c.cta.text}
-        <Arrow />
       </a>
     </article>
   );
@@ -117,7 +117,7 @@ export function DirectionPrices({ direction, locale, dark = false, base }: { dir
 
       {rest.length > 0 && (
         <div className="mt-10">
-          <h3 className={cx('caps mb-2', dark ? 'text-dark-muted' : 'text-muted')}>{direction === 'promotion' ? p.otherServices : p.labels.monthly}</h3>
+          <h3 className={cx('mb-2 text-[17px] font-semibold', dark ? 'text-onaccent' : 'text-ink')}>{direction === 'promotion' ? p.otherServices : p.labels.monthly}</h3>
           <ul className={cx('divide-y border-y', dark ? 'divide-dark-line border-dark-line' : 'divide-line border-line')}>
             {rest.map((id) => (
               <li key={id} id={id === 'audit' ? undefined : id} className="grid gap-1 py-4 md:grid-cols-[1.1fr_1.6fr_180px] md:items-baseline md:gap-6">
@@ -126,7 +126,7 @@ export function DirectionPrices({ direction, locale, dark = false, base }: { dir
                   {s[id].scope}
                   {s[id].term ? ` · ${s[id].term}` : ''}
                 </span>
-                <span className="text-[16px] font-semibold md:text-right">{servicePrice(id, market, locale, w)}</span>
+                <span className="num text-[16px] font-semibold md:text-right">{servicePrice(id, market, locale, w)}</span>
               </li>
             ))}
           </ul>

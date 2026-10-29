@@ -1,23 +1,22 @@
 import Link from 'next/link';
-import { LOGO } from './logo-paths';
 
 export function cx(...parts: (string | false | null | undefined)[]) {
   return parts.filter(Boolean).join(' ');
 }
 
 const base =
-  'inline-flex items-center justify-center gap-2.5 rounded-full text-[14px] font-semibold uppercase tracking-caps transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+  'inline-flex items-center justify-center gap-2 rounded-[10px] text-[16px] font-semibold leading-none transition active:scale-[.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 
-/** Все кнопки — в фиолетовом акценте: залитая (главная) и контурная (вторая) */
+/** Главная кнопка — зелёная заливка; вторая — спокойная обводка в цвет текста */
 export const btn = {
-  primary: `${base} bg-accent px-7 py-4 text-onaccent shadow-accent hover:bg-accent-dark`,
-  secondary: `${base} border border-accent px-7 py-[15px] text-accent hover:bg-accent hover:text-onaccent`,
+  primary: `${base} bg-accent px-6 py-[15px] text-onaccent hover:bg-accent-dark`,
+  secondary: `${base} border border-line bg-bg px-6 py-[14px] text-ink hover:border-ink`,
   /** Контурная на тёмном фоне */
-  secondaryDark: `${base} border border-accent/80 px-7 py-[15px] text-onaccent hover:bg-accent`,
+  secondaryDark: `${base} border border-dark-line px-6 py-[14px] text-onaccent hover:border-onaccent`,
   link: 'inline-flex items-center gap-1.5 text-[16px] font-semibold text-accent underline-offset-4 hover:underline',
 };
 
-/** Светлая секция: огромный заголовок капсом + сквозной номер справа */
+/** Секция: белая или второго тона (surface) */
 export function Section({
   id,
   children,
@@ -30,27 +29,25 @@ export function Section({
   tone?: 'bg' | 'surface';
 }) {
   return (
-    <section id={id} className={cx('cv-auto py-20 md:py-28', tone === 'surface' ? 'bg-surface' : 'bg-bg', className)}>
+    <section id={id} className={cx('cv-auto py-16 md:py-24', tone === 'surface' ? 'bg-surface' : 'bg-bg', className)}>
       <div className="container">{children}</div>
     </section>
   );
 }
 
-/** Тёмная секция-панель со скруглением и сеткой */
+/** Тёмная секция — ровный графитовый фон, используется точечно */
 export function DarkPanel({ id, children, className }: { id?: string; children: React.ReactNode; className?: string }) {
   return (
-    <section id={id} className={cx('cv-auto bg-bg px-2 py-2 md:px-4 md:py-4', className)}>
-      <div className="grid-bg relative overflow-hidden rounded-[28px] text-onaccent md:rounded-[40px]">
-        <div className="container relative py-20 md:py-28">{children}</div>
-      </div>
+    <section id={id} className={cx('cv-auto bg-dark text-onaccent', className)}>
+      <div className="container relative py-16 md:py-24">{children}</div>
     </section>
   );
 }
 
+/** Заголовок секции: h2 и подзаголовок. num оставлен в сигнатуре для совместимости и не выводится. */
 export function SectionHead({
   title,
   sub,
-  num,
   dark,
   align = 'left',
   aside,
@@ -63,27 +60,12 @@ export function SectionHead({
   aside?: React.ReactNode;
 }) {
   return (
-    <div className={cx('mb-12 md:mb-16', align === 'center' && 'text-center')}>
-      <div className={cx('flex items-end gap-6', align === 'center' ? 'justify-center' : 'justify-between')}>
-        <h2
-          className={cx(
-            'display',
-            // длинные заголовки — на ступень мельче, чтобы не рвались на 4 строки
-            title.length > 18 ? 'text-[34px] sm:text-5xl lg:text-[64px]' : 'text-[44px] sm:text-6xl lg:text-[88px]',
-            dark && 'text-onaccent',
-          )}
-        >
-          {title}
-        </h2>
-        {num && align === 'left' && <span className={cx('mb-2 text-lg font-semibold', dark ? 'text-lime' : 'text-accent')}>{num}</span>}
+    <div className={cx('mb-10 flex flex-col gap-5 md:mb-14 md:flex-row md:items-end md:justify-between', align === 'center' && 'items-center text-center md:flex-col md:items-center')}>
+      <div className="max-w-2xl">
+        <h2 className={cx('h2', dark && 'text-onaccent')}>{title}</h2>
+        {sub && <p className={cx('mt-4 text-[17px] leading-relaxed md:text-lg', dark ? 'text-dark-muted' : 'text-muted')}>{sub}</p>}
       </div>
-      {num && align === 'center' && <span className={cx('mt-3 block text-lg font-semibold', dark ? 'text-lime' : 'text-accent')}>{num}</span>}
-      {(sub || aside) && (
-        <div className={cx('mt-6 flex flex-col gap-6 md:flex-row md:items-end', align === 'center' ? 'items-center justify-center' : 'md:justify-between')}>
-          {sub && <p className={cx('max-w-2xl text-lg leading-relaxed md:text-xl', dark ? 'text-dark-muted' : 'text-muted')}>{sub}</p>}
-          {aside}
-        </div>
-      )}
+      {aside}
     </div>
   );
 }
@@ -91,13 +73,13 @@ export function SectionHead({
 export function Badge({ children, tone = 'tag' }: { children: React.ReactNode; tone?: 'concept' | 'sample' | 'tag' | 'tagDark' | 'accent' }) {
   const styles = {
     // заметная плашка: залитый акцент
-    concept: 'bg-accent text-onaccent',
-    sample: 'bg-accent text-onaccent',
-    tag: 'border border-line text-muted',
-    tagDark: 'border border-dark-line text-dark-muted',
-    accent: 'bg-accent text-onaccent',
+    concept: 'bg-accent-soft text-accent-dark',
+    sample: 'bg-accent-soft text-accent-dark',
+    tag: 'bg-surface text-muted',
+    tagDark: 'bg-dark-2 text-dark-muted',
+    accent: 'bg-accent-soft text-accent-dark',
   }[tone];
-  return <span className={cx('inline-flex items-center rounded-full px-3 py-1 text-[13px] font-bold uppercase tracking-caps', styles)}>{children}</span>;
+  return <span className={cx('inline-flex items-center rounded-md px-2.5 py-1 text-[13px] font-medium leading-tight', styles)}>{children}</span>;
 }
 
 export function CtaLink({ href, children, className }: { href: string; children: React.ReactNode; className?: string }) {
@@ -149,18 +131,12 @@ export function TelegramIcon({ className }: { className?: string }) {
   );
 }
 
-/** Логотип DEREVENKO / NIKITA. Буквы — цвет текста, деталь в K — акцент. */
-export function Logo({ className, dark }: { className?: string; dark?: boolean }) {
+/** Словесный знак: имя и фамилия. name передаётся из словаря (RU/EN). */
+export function Logo({ className, dark, name = 'Nikita Derevenko' }: { className?: string; dark?: boolean; name?: string }) {
   return (
-    <svg
-      role="img"
-      aria-label="Nikita Derevenko"
-      viewBox={`0 0 ${LOGO.w} ${LOGO.h}`}
-      className={cx('block h-[26px] w-auto min-[360px]:h-[30px]', dark ? 'text-onaccent' : 'text-ink', className)}
-    >
-      <path fillRule="evenodd" fill="currentColor" d={LOGO.ink} />
-      <path className="text-accent" fill="currentColor" d={LOGO.accent} />
-    </svg>
+    <span className={cx('block whitespace-nowrap text-[18px] font-semibold tracking-[-0.01em]', dark ? 'text-onaccent' : 'text-ink', className)}>
+      {name}
+    </span>
   );
 }
 

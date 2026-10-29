@@ -7,7 +7,7 @@ import { clientDict, getDict } from '@/lib/i18n';
 import { isVisible, PROJECTS } from '@/lib/projects';
 import { isLocale, LEGAL, LOCALES, SITE, TELEGRAM_URL, type Locale } from '@/lib/site';
 
-// Шрифт подключается в app/globals.css (свой сабсет Inter Tight, см. комментарий там)
+// Шрифт Onest подключается в app/globals.css (свои woff2, см. комментарий там)
 
 export const dynamicParams = false;
 
@@ -31,7 +31,7 @@ export function generateStaticParams() {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#F3EFE7',
+  themeColor: '#FFFFFF',
   width: 'device-width',
   initialScale: 1,
 };
@@ -83,8 +83,8 @@ export default async function LocaleLayout({ children, params: paramsP }: { chil
     <html lang={locale} suppressHydrationWarning>
       <head>
         {/* Шрифт первого экрана грузим сразу, вместе с HTML */}
-        <link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        {locale === 'ru' && <link rel="preload" href="/fonts/inter-tight-cyrillic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />}
+        <link rel="preload" href="/fonts/onest-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {locale === 'ru' && <link rel="preload" href="/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />}
         {/* Отмечаем, что JS работает — для слайдера до/после без сдвига вёрстки */}
         {/* + прячем баннер cookie до первой отрисовки, если выбор уже сделан */}
         <script

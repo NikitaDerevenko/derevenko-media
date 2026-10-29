@@ -14,15 +14,15 @@ import { btn, cx, Logo } from './ui';
 export function Footer() {
   const { locale, dict } = useApp();
   return (
-    <footer className="border-t border-line bg-bg pb-28 pt-14 md:pb-14">
+    <footer className="border-t border-line bg-surface pb-28 pt-14 md:pb-14">
       <div className="container flex flex-col gap-10 md:flex-row md:items-start md:justify-between">
         <div className="max-w-sm">
-          <Logo />
+          <Logo name={dict.brand.name} />
           <p className="mt-4 text-[14px] text-muted">{dict.footer.role}</p>
         </div>
         <div className="flex flex-col gap-2 text-[14px]">
           <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className="font-semibold hover:text-accent">
-            Telegram · @{SITE.telegram}
+            Telegram: @{SITE.telegram}
           </TrackedLink>
           {SITE.email && (
             <TrackedLink goalName="click_email" href={`mailto:${SITE.email}`} className="font-semibold hover:text-accent">
@@ -68,7 +68,7 @@ export function StickyCta() {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     // прячемся, пока на экране формы (#start) или квиз — иначе кнопка перекрывает их «Далее» и «Отправить»
-    const targets = ['start', 'calculator'].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => Boolean(el));
+    const targets = ['start'].map((id) => document.getElementById(id)).filter((el): el is HTMLElement => Boolean(el));
     let io: IntersectionObserver | undefined;
     if (targets.length && 'IntersectionObserver' in window) {
       const seen = new Map<Element, boolean>();
@@ -98,7 +98,7 @@ export function StickyCta() {
       )}
       aria-hidden={!visible}
     >
-      <a href={formOnPage ? '#contact' : `/${locale}#contact`} tabIndex={visible ? 0 : -1} className={cx(btn.primary, 'w-full')}>
+      <a href={formOnPage ? '#start' : `/${locale}#start`} tabIndex={visible ? 0 : -1} className={cx(btn.primary, 'w-full')}>
         {dict.sticky.cta}
       </a>
     </div>
@@ -138,18 +138,19 @@ export function CookieConsent() {
         </Script>
       )}
       {consent == null && (
-        <div role="dialog" aria-live="polite" aria-label="Cookie" className="cookie-banner fixed inset-x-3 bottom-3 z-50 mx-auto max-w-2xl rounded-2xl border border-line bg-surface p-4 shadow-soft md:bottom-5 md:p-5">
-          <p className="text-[14px] leading-relaxed text-ink">
+        // Компактная полоса: на телефоне не закрывает первый экран
+        <div role="dialog" aria-live="polite" aria-label="Cookie" className="cookie-banner fixed inset-x-2 bottom-2 z-50 mx-auto flex max-w-3xl flex-col gap-2 rounded-xl border border-line bg-bg p-3 shadow-soft sm:flex-row sm:items-center sm:gap-4 md:bottom-4 md:px-4">
+          <p className="text-[13px] leading-snug text-ink sm:flex-1">
             {dict.cookie.text}{' '}
             <Link prefetch={false} href={`/${locale}/privacy#cookies`} className="underline hover:text-ink">
               {dict.cookie.more}
             </Link>
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <button type="button" onClick={() => choose('all')} className={cx(btn.primary, 'px-5 py-3')}>
+          <div className="flex shrink-0 gap-2">
+            <button type="button" onClick={() => choose('all')} className="rounded-lg bg-ink px-4 py-2 text-[14px] font-semibold text-onaccent hover:bg-ink/85">
               {dict.cookie.accept}
             </button>
-            <button type="button" onClick={() => choose('necessary')} className={cx(btn.secondary, 'px-5 py-3')}>
+            <button type="button" onClick={() => choose('necessary')} className="rounded-lg px-3 py-2 text-[14px] font-medium text-muted hover:text-ink">
               {dict.cookie.decline}
             </button>
           </div>

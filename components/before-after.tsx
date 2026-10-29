@@ -78,7 +78,7 @@ export function BeforeAfter({ before, after, w, h, aspect, position = 'center', 
       {/* Слайдер (только с JS) */}
       <div
         ref={boxRef}
-        className="ba-slider relative touch-pan-y select-none overflow-hidden rounded-[20px] bg-dark"
+        className="ba-slider relative touch-pan-y select-none overflow-hidden rounded-2xl bg-dark"
         style={{ aspectRatio: String(ratio) }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -87,10 +87,10 @@ export function BeforeAfter({ before, after, w, h, aspect, position = 'center', 
         <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
           <Image src={before} alt={`${alt} — ${labels.before}`} fill sizes={sizes} priority={priority} loading={loading} style={imgStyle} draggable={false} />
         </div>
-        <span className={cx('pointer-events-none absolute rounded-full bg-dark/85 px-2.5 py-1 text-[12px] font-bold uppercase leading-none tracking-wide text-onaccent', compact ? 'bottom-2 left-2' : 'left-3 top-3')}>
+        <span className={cx('pointer-events-none absolute rounded-full bg-dark/85 px-2.5 py-1 text-[12px] font-semibold leading-none tracking-wide text-onaccent', compact ? 'bottom-2 left-2' : 'left-3 top-3')}>
           {labels.before}
         </span>
-        <span className={cx('pointer-events-none absolute rounded-full bg-accent px-2.5 py-1 text-[12px] font-bold uppercase leading-none tracking-wide text-onaccent', compact ? 'bottom-2 right-2' : 'right-3 top-3')}>
+        <span className={cx('pointer-events-none absolute rounded-full bg-accent px-2.5 py-1 text-[12px] font-semibold leading-none tracking-wide text-onaccent', compact ? 'bottom-2 right-2' : 'right-3 top-3')}>
           {labels.after}
         </span>
         <div className="pointer-events-none absolute inset-y-0 w-0.5 -translate-x-1/2 bg-surface shadow-[0_0_0_1px_rgb(var(--ink)/.15)]" style={{ left: `${pos}%` }} />
@@ -118,7 +118,7 @@ export function BeforeAfter({ before, after, w, h, aspect, position = 'center', 
           { src: before, label: labels.before },
           { src: after, label: labels.after },
         ].map((img) => (
-          <figure key={img.src} className="relative overflow-hidden rounded-[20px] bg-dark" style={{ aspectRatio: String(ratio) }}>
+          <figure key={img.src} className="relative overflow-hidden rounded-2xl bg-dark" style={{ aspectRatio: String(ratio) }}>
             <Image src={img.src} alt={`${alt} — ${img.label}`} fill sizes="50vw" loading="lazy" style={imgStyle} />
             <figcaption className={cx('absolute left-2 top-2 rounded-full px-2.5 py-1 text-[12px] font-bold text-onaccent', img.label === labels.after ? 'bg-accent' : 'bg-dark/85')}>
               {img.label}

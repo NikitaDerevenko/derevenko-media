@@ -8,8 +8,8 @@ const config: Config = {
   theme: {
     container: {
       center: true,
-      padding: { DEFAULT: '1rem', sm: '1.5rem', lg: '3rem' },
-      screens: { '2xl': '1440px' },
+      padding: { DEFAULT: '1.25rem', sm: '1.5rem', lg: '2.5rem' },
+      screens: { '2xl': '1240px' },
     },
     extend: {
       colors: {
@@ -31,9 +31,9 @@ const config: Config = {
         caps: '0.08em',
       },
       boxShadow: {
-        soft: '0 1px 2px rgb(var(--ink) / .04), 0 12px 32px -16px rgb(var(--ink) / .18)',
+        soft: '0 1px 2px rgb(var(--ink) / .05), 0 8px 24px -12px rgb(var(--ink) / .14)',
         device: '0 40px 80px -30px rgb(var(--ink) / .45), 0 18px 30px -18px rgb(var(--ink) / .35)',
-        accent: '0 14px 36px -12px rgb(var(--accent) / .6)',
+        accent: 'none',
       },
       keyframes: {
         float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },

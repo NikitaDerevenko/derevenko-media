@@ -59,7 +59,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
 
       <header className="bg-bg">
         <div className="container pb-12 pt-8 md:pb-16 md:pt-12">
-          <Link prefetch={false} href={`/${locale}#${p.isSolution ? 'solutions' : 'projects'}`} className="caps inline-flex items-center gap-2 text-muted hover:text-ink">
+          <Link prefetch={false} href={`/${locale}#${p.isSolution ? 'solutions' : 'projects'}`} className="inline-flex items-center gap-2 text-[15px] font-medium text-muted hover:text-ink">
             <Arrow className="h-3.5 w-3.5 rotate-180" />
             {p.isSolution ? dict.solutions.back : dict.common.back}
           </Link>
@@ -70,23 +70,23 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
               </Badge>
             ))}
           </div>
-          <h1 className="mt-6 max-w-5xl text-[34px] font-semibold leading-[1.02] tracking-tight sm:text-5xl lg:text-[64px]">{p.title[locale]}</h1>
-          <p className="caps mt-6 text-muted">
-            {p.isSolution ? `${dict.solutions.label} · ${clientLabel(p, locale)}` : `${clientLabel(p, locale)} · ${p.year}`}
+          <h1 className="h1 mt-6 max-w-[24ch]">{p.title[locale]}</h1>
+          <p className="mt-5 text-[16px] text-muted">
+            {p.isSolution ? `${dict.solutions.label}: ${clientLabel(p, locale)}` : `${clientLabel(p, locale)}, ${p.year}`}
           </p>
         </div>
       </header>
 
-      {/* обложка на тёмной сцене */}
-      <section className="bg-bg px-2 md:px-4">
-        <div className="grid-bg overflow-hidden rounded-[28px] md:rounded-[40px]">
+      {/* обложка на спокойной серой подложке */}
+      <section className="bg-surface">
+        <div>
           <div className="container py-10 md:py-16">
             {isLumos && cover ? (
-              <figure className="mx-auto max-w-5xl overflow-hidden rounded-[24px]">
+              <figure className="mx-auto max-w-5xl overflow-hidden rounded-2xl">
                 <Image src={cover.src} alt={cover.alt[locale]} width={cover.w} height={cover.h} priority sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full" />
               </figure>
             ) : isLumos ? (
-              <CandleCover locale={locale} size="lg" className="relative aspect-[16/9] w-full rounded-[24px] md:aspect-[21/9]" />
+              <CandleCover locale={locale} size="lg" className="relative aspect-[16/9] w-full rounded-2xl md:aspect-[21/9]" />
             ) : p.beforeAfter ? (
               <div className={cx('mx-auto', p.beforeAfter.w / p.beforeAfter.h > 0.6 ? 'max-w-[460px]' : 'max-w-[340px]')}>
                 <Phone label={p.title[locale]} aspect={p.beforeAfter.w / p.beforeAfter.h}>
@@ -102,7 +102,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
               </div>
             ) : cover && cover.w === 1536 ? (
               // готовый слайд-презентация: показываем как есть, без рамки браузера
-              <figure className="mx-auto max-w-5xl overflow-hidden rounded-[24px]">
+              <figure className="mx-auto max-w-5xl overflow-hidden rounded-2xl">
                 <Image src={cover.src} alt={cover.alt[locale]} width={cover.w} height={cover.h} priority sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full" />
               </figure>
             ) : cover ? (
@@ -112,7 +112,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
                 </div>
               </BrowserFrame>
             ) : null}
-            {p.coverCaption && <p className="mx-auto mt-4 max-w-5xl text-center text-[14px] text-dark-muted">{p.coverCaption[locale]}</p>}
+            {p.coverCaption && <p className="mx-auto mt-4 max-w-5xl text-center text-[14px] text-muted">{p.coverCaption[locale]}</p>}
           </div>
         </div>
       </section>
@@ -121,15 +121,15 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
         {/* задача и что сделал */}
         <div className="grid gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-20">
           <section>
-            <h2 className="caps text-accent">{p.isSolution ? dict.solutions.task : t.task}</h2>
-            <p className="mt-5 text-2xl font-medium leading-snug md:text-[28px]">{p.task[locale]}</p>
+            <h2 className="text-[15px] font-semibold text-muted">{p.isSolution ? dict.solutions.task : t.task}</h2>
+            <p className="mt-4 text-[22px] font-medium leading-snug tracking-[-0.01em] md:text-[26px]">{p.task[locale]}</p>
           </section>
           <section>
-            <h2 className="caps text-accent">{t.did}</h2>
+            <h2 className="text-[15px] font-semibold text-muted">{t.did}</h2>
             <ol className="mt-5 border-t border-line">
               {p.steps.map((s, i) => (
-                <li key={s.ru} className="grid grid-cols-[48px_1fr] gap-4 border-b border-line py-5">
-                  <span className="text-[14px] font-semibold text-accent">{String(i + 1).padStart(2, '0')}</span>
+                <li key={s.ru} className="grid grid-cols-[32px_1fr] gap-3 border-b border-line py-5">
+                  <span className="text-[15px] font-semibold text-muted">{i + 1}</span>
                   <span className="text-[17px] leading-relaxed">{s[locale]}</span>
                 </li>
               ))}
@@ -140,7 +140,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
         {/* «Итог работы» для кейсов с фото — только когда значения заполнены в lib/site.ts */}
         {showPhotoResult && (
           <section className="card mt-16 p-7 md:p-10">
-            <h2 className="text-2xl font-semibold md:text-3xl">{t.resultBlock}</h2>
+            <h2 className="h3">{t.resultBlock}</h2>
             <dl className="mt-6 grid gap-6 sm:grid-cols-3">
               {[
                 [t.resultItems, photoResult.items],
@@ -148,7 +148,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
                 [t.resultTerm, photoResult.term],
               ].map(([k, v]) => (
                 <div key={k} className="border-t border-line pt-4">
-                  <dt className="caps text-muted">{k}</dt>
+                  <dt className="text-[14px] text-muted">{k}</dt>
                   <dd className="mt-2 text-lg font-semibold">{v}</dd>
                 </div>
               ))}
@@ -158,33 +158,33 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
 
         {/* результаты — только при наличии данных */}
         {p.results.length > 0 && (
-          <section className="mt-20 rounded-[28px] bg-dark p-7 text-onaccent md:p-12">
-            <h2 className="display text-4xl md:text-6xl">{t.resultsTitle}</h2>
+          <section className="mt-20 rounded-2xl bg-surface p-6 md:p-12">
+            <h2 className="h2">{t.resultsTitle}</h2>
             <ul className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
               {p.results.map((r) => (
-                <li key={r.text.ru} className="border-t border-dark-line pt-5">
-                  <p className="caps flex items-center gap-2 text-dark-muted">
-                    <span aria-hidden="true" className="h-2 w-2 rounded-full bg-lime" />
+                <li key={r.text.ru} className="border-t border-line pt-5">
+                  <p className="flex items-center gap-2 text-[14px] text-muted">
+                    <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />
                     {r.label[locale]}
                   </p>
-                  <p className="mt-3 text-xl font-semibold leading-snug md:text-2xl">{r.text[locale]}</p>
-                  {r.note && <p className="mt-2 text-[14px] text-dark-muted">{r.note[locale]}</p>}
+                  <p className="mt-2 text-[19px] font-semibold leading-snug md:text-[21px]">{r.text[locale]}</p>
+                  {r.note && <p className="mt-2 text-[14px] text-muted">{r.note[locale]}</p>}
                 </li>
               ))}
             </ul>
             {proof && (
-              <div className="mt-10 rounded-2xl border border-dark-line p-5">
-                <p className="caps text-dark-muted">{t.proofTitle}</p>
+              <div className="mt-10 rounded-2xl border border-line bg-bg p-5">
+                <p className="text-[14px] text-muted">{t.proofTitle}</p>
                 <p className="mt-2 text-[16px] leading-relaxed">{proof}</p>
               </div>
             )}
             {proofImg && (
-              <figure className="mt-8 overflow-hidden rounded-2xl border border-dark-line">
+              <figure className="mt-8 overflow-hidden rounded-2xl border border-line bg-bg">
                 <Image src={LUMOS_PROOF_IMAGE} alt={t.proofImage} width={1600} height={1000} sizes="(min-width: 1024px) 1024px, 100vw" className="h-auto w-full" />
-                <figcaption className="px-4 py-3 text-[14px] text-dark-muted">{t.proofImage}</figcaption>
+                <figcaption className="px-4 py-3 text-[14px] text-muted">{t.proofImage}</figcaption>
               </figure>
             )}
-            <p className="mt-10 text-[14px] text-dark-muted">
+            <p className="mt-10 text-[14px] text-muted">
               {p.resultsSource && (
                 <>
                   {t.source}: {p.resultsSource[locale]}
@@ -192,7 +192,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
               )}
               {p.resultsPeriod && (
                 <>
-                  {' · '}
+                  {'. '}
                   {t.period}: {p.resultsPeriod[locale]}
                 </>
               )}
@@ -202,8 +202,8 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
 
         {p.testimonial && (
           <figure className="mx-auto mt-20 max-w-4xl">
-            <p className="caps text-accent">{t.testimonial}</p>
-            <blockquote className="mt-5 text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
+            <p className="text-[15px] font-semibold text-muted">{t.testimonial}</p>
+            <blockquote className="mt-4 border-l-4 border-accent pl-6 text-[24px] font-medium leading-snug tracking-[-0.01em] md:text-[32px]">
               {locale === 'ru' ? `«${p.testimonial.text.ru}»` : `“${p.testimonial.text.en}”`}
             </blockquote>
             <figcaption className="mt-5 text-muted">— {p.testimonial.author?.[locale] ?? t.defaultAuthor}</figcaption>
@@ -212,7 +212,7 @@ export default async function ProjectPage({ params: paramsP }: { params: Promise
 
         {gallery.length > 0 && (
           <section className="mt-20">
-            <h2 className="display mb-10 text-4xl md:text-6xl">{t.gallery}</h2>
+            <h2 className="h2 mb-10">{t.gallery}</h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {gallery.map((img) =>
                 img.tall ? (

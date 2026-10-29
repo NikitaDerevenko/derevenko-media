@@ -4,91 +4,91 @@ import { LeadForm } from '../lead-form';
 import { TrackedLink } from '../tracked-link';
 import Image from 'next/image';
 import { publicFileExists } from '../project-cards';
+import { Tabs } from '../tabs';
 import { Check, Section, SectionHead, TelegramIcon, btn, cx } from '../ui';
 
 /**
- * Два равноправных пути обращения рядом:
+ * Финальный блок: кто ответит, что будет после заявки и одна форма с двумя вкладками:
  *  #audit   — бесплатный разбор для действующего бизнеса (ссылка + контакт);
- *  #contact — обсудить проект для нового сайта, бота или Mini App (направление + задача + контакт).
+ *  #contact — новый проект: сайт, бот или Mini App (направление + задача + контакт).
  */
-export function StartSection({ locale, num, defaultDirection, primary = 'audit' }: { locale: Locale; num?: string; defaultDirection?: string; primary?: 'audit' | 'project' }) {
+export function StartSection({ locale, defaultDirection, primary = 'audit' }: { locale: Locale; num?: string; defaultDirection?: string; primary?: 'audit' | 'project' }) {
   const dict = getDict(locale);
   const a = dict.audit;
   const c = dict.contact;
-  const auditCard = (
-    <div key="audit" id="audit" className="card flex flex-col p-6 md:p-8">
-      <h3 className="text-2xl font-semibold md:text-3xl">{a.title}</h3>
-      <p className="mt-2 text-muted">{a.sub}</p>
-      <ul className="mt-5 space-y-2">
+  const s = dict.start;
+  const avatar = '/about/avatar.jpg';
+  const auditPanel = (
+    <div key="audit">
+      <p className="text-muted">{a.sub}</p>
+      <ul className="mt-4 space-y-1.5">
         {a.gets.map((g) => (
           <li key={g} className="flex gap-2.5 text-[16px]">
-            <Check className="mt-0.5 h-4 w-4 text-accent" />
+            <Check className="mt-1 h-4 w-4 text-accent" />
             {g}
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-[14px] text-muted">{a.term}</p>
       <div className="mt-6">
         <LeadForm variant="audit" />
       </div>
     </div>
   );
-  const projectCard = (
-    <div key="contact" id="contact" className="card flex flex-col p-6 md:p-8">
-      <h3 className="text-2xl font-semibold md:text-3xl">{c.title}</h3>
-      <p className="mt-2 text-muted">{c.sub}</p>
+  const projectPanel = (
+    <div key="contact">
+      <p className="text-muted">{c.sub}</p>
       <div className="mt-6">
         <LeadForm variant="contact" defaultDirection={defaultDirection} />
       </div>
-      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-5 text-[14px] text-muted">
-        <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className="inline-flex items-center gap-2 font-semibold text-accent hover:underline">
-          <TelegramIcon className="h-4 w-4" />@{SITE.telegram}
-        </TrackedLink>
-        {SITE.email && (
-          <TrackedLink goalName="click_email" href={`mailto:${SITE.email}`} className="font-semibold text-accent hover:underline">
-            {SITE.email}
-          </TrackedLink>
-        )}
-        <span>{c.hours}</span>
-      </div>
     </div>
   );
-  const s = dict.start;
-  const photo = '/about/photo.jpg';
+  const order = primary === 'audit' ? ['audit', 'contact'] : ['contact', 'audit'];
   return (
     <Section id="start">
-      <SectionHead title={s.title} sub={s.sub} num={num} />
-      {/* Кто ответит на заявку — живой человек, а не «менеджер» */}
-      <div className="mb-6 flex items-center gap-4 rounded-[20px] border border-line bg-surface p-4 md:p-5">
-        {publicFileExists(photo) && (
-          <Image src={photo} alt={s.personal.name} width={96} height={120} sizes="96px" className="h-[110px] w-[88px] shrink-0 rounded-2xl object-cover object-top md:h-[120px] md:w-[96px]" />
-        )}
-        <div className="min-w-0 flex-1">
-          <p className="text-[19px] font-semibold leading-tight">{s.personal.name}</p>
-          <p className="mt-1 text-[14px] leading-snug text-muted">
-            {s.personal.role} · {s.personal.reply}
-          </p>
+      <span id="audit" className="block" aria-hidden="true" />
+      <span id="contact" className="block" aria-hidden="true" />
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16">
+        <div>
+          <h2 className="h2">{s.title}</h2>
+          <p className="mt-4 text-[17px] text-muted">{s.sub}</p>
+
+          {/* Кто ответит на заявку — живой человек, а не «менеджер» */}
+          <div className="mt-8 flex items-center gap-4">
+            {publicFileExists(avatar) && <Image src={avatar} alt="" width={64} height={64} sizes="64px" className="h-16 w-16 shrink-0 rounded-full object-cover object-top" />}
+            <div className="min-w-0">
+              <p className="font-semibold leading-tight">{s.personal.name}</p>
+              <p className="mt-1 text-[15px] leading-snug text-muted">{s.personal.reply}</p>
+            </div>
+          </div>
+          <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className={cx(btn.secondary, 'mt-6')}>
+            <TelegramIcon className="h-[18px] w-[18px]" />
+            {dict.hero.ctaSecondary}
+          </TrackedLink>
+
+          <h3 className="mt-12 text-[17px] font-semibold">{s.after.title}</h3>
+          <ol className="mt-4 space-y-4">
+            {s.after.steps.map((step, i) => (
+              <li key={step.title} className="flex gap-4">
+                <span className="num grid h-7 w-7 shrink-0 place-items-center rounded-full bg-surface text-[14px] font-semibold">{i + 1}</span>
+                <div>
+                  <p className="font-semibold leading-snug">{step.title}</p>
+                  <p className="mt-1 text-[15px] leading-relaxed text-muted">{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
         </div>
-        <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className={cx(btn.secondary, 'hidden shrink-0 px-5 py-3 sm:inline-flex')}>
-          <TelegramIcon className="h-4 w-4" />
-          Telegram
-        </TrackedLink>
+
+        <div className="rounded-2xl border border-line bg-bg p-6 shadow-soft md:p-8">
+          <Tabs
+            id="lead"
+            hashes={order}
+            labels={order.map((k) => (k === 'audit' ? a.title : c.title))}
+            panels={order.map((k) => (k === 'audit' ? auditPanel : projectPanel))}
+          />
+          <p className="mt-6 border-t border-line pt-5 text-[14px] text-muted">{dict.guarantees.short}</p>
+        </div>
       </div>
-      <div className="grid gap-5 lg:grid-cols-2">{primary === 'audit' ? [auditCard, projectCard] : [projectCard, auditCard]}</div>
-      {/* Что будет после заявки — чтобы не оставалось вопросов «а дальше что?» */}
-      <div className="mt-10">
-        <h3 className="caps text-muted">{s.after.title}</h3>
-        <ol className="mt-4 grid gap-4 md:grid-cols-3">
-          {s.after.steps.map((step, i) => (
-            <li key={step.title} className="border-t border-line pt-4">
-              <span className="text-[14px] font-semibold text-accent">{String(i + 1).padStart(2, '0')}</span>
-              <p className="mt-2 text-[17px] font-semibold">{step.title}</p>
-              <p className="mt-1 text-[15px] leading-relaxed text-muted">{step.text}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-      <p className="mt-8 text-[14px] text-muted">{dict.guarantees.short}</p>
     </Section>
   );
 }
@@ -119,27 +119,51 @@ export function BotsSection({ locale, num }: { locale: Locale; num?: string }) {
   );
 }
 
-/** Вопросы — таблицей, ответы видны сразу (лучше для SEO и для сканирования глазами) */
+/** Вопросы аккордеоном: ответы в HTML (видны поисковикам), раскрываются по клику */
 export function FaqList({ items }: { items: { q: string; a: string }[] }) {
   return (
-    <ol className="border-t border-line">
-      {items.map((f, i) => (
-        <li key={f.q} className="grid gap-3 border-b border-line py-8 md:grid-cols-[64px_1fr_1.25fr] md:gap-6 md:py-10">
-          <span className="text-[14px] font-semibold text-accent">{String(i + 1).padStart(2, '0')}</span>
-          <h3 className="text-lg font-semibold leading-snug md:text-xl">{f.q}</h3>
-          <p className="text-[16px] leading-relaxed text-muted">{f.a}</p>
+    <ul className="border-t border-line">
+      {items.map((f) => (
+        <li key={f.q} className="border-b border-line">
+          <details className="group">
+            <summary className="flex cursor-pointer items-start justify-between gap-6 py-5 text-[17px] font-semibold leading-snug transition hover:text-accent md:text-[18px]">
+              {f.q}
+              <svg aria-hidden="true" viewBox="0 0 20 20" className="faq-icon mt-1 h-4 w-4 shrink-0 text-muted transition-transform" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M10 4v12M4 10h12" strokeLinecap="round" />
+              </svg>
+            </summary>
+            <p className="max-w-[68ch] pb-6 text-[16px] leading-relaxed text-muted">{f.a}</p>
+          </details>
         </li>
       ))}
-    </ol>
+    </ul>
   );
 }
 
-export function FaqSection({ locale, num }: { locale: Locale; num: string }) {
-  const t = getDict(locale).faq;
+export function FaqSection({ locale }: { locale: Locale; num?: string }) {
+  const dict = getDict(locale);
+  const t = dict.faq;
+  // разметка FAQPage для поиска
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: t.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  };
   return (
-    <Section id="faq">
-      <SectionHead title={t.title} num={num} />
-      <FaqList items={t.items} />
+    <Section id="faq" tone="surface">
+      <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-16">
+        <div>
+          <h2 className="h2">{t.title}</h2>
+          <p className="mt-4 text-muted">
+            {dict.faqAside.text}{' '}
+            <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className="font-semibold text-accent hover:underline">
+              @{SITE.telegram}
+            </TrackedLink>
+          </p>
+        </div>
+        <FaqList items={t.items} />
+      </div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
     </Section>
   );
 }

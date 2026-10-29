@@ -16,13 +16,13 @@ const cyrillic = range(0x400, 0x45f);
 
 (async () => {
   for (const [name, file, text] of [
-    ['latin', 'inter-tight-latin.woff2', latin],
-    ['cyrillic', 'inter-tight-cyrillic.woff2', cyrillic],
+    ['latin', 'onest-latin.woff2', latin],
+    ['cyrillic', 'onest-cyrillic.woff2', cyrillic],
   ]) {
     const src = fs.readFileSync(path.join(root, 'public', 'fonts', file));
     for (const wght of [400, 600]) {
       const ttf = await subsetFont(src, text, { targetFormat: 'truetype', variationAxes: { wght } });
-      const dest = path.join(out, `inter-tight-${name}-${wght}.ttf`);
+      const dest = path.join(out, `onest-${name}-${wght}.ttf`);
       fs.writeFileSync(dest, ttf);
       console.log(path.relative(root, dest), ttf.length);
     }
