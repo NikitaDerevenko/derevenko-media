@@ -45,7 +45,7 @@ export const REVIEWS_URL = 'https://t.me/otzivyMDK';
  * ФИО указывается полностью, как в «Мой налог»; при наличии отчества добавьте его в name.
  */
 export const LEGAL = {
-  name: { ru: 'Деревенко Никита', en: 'Nikita Derevenko' },
+  name: { ru: 'Деревенко Никита Анатольевич', en: 'Nikita Anatolyevich Derevenko' },
   inn: '532004404152',
   /** Сервис ФНС «Проверить статус самозанятого» */
   checkUrl: 'https://npd.nalog.ru/check-status/',
