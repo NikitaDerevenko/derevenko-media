@@ -378,6 +378,7 @@ export const en: Dict = {
       },
       {
         tag: 'Yandex Maps',
+        who: 'Laser hair removal studio',
         text: 'Our map listing had two old photos and the wrong opening hours — we kept putting it off. Nikita set up the listing, organised the services and suggested which photos to reshoot. Now we’re happy to show it to people.',
       },
       { tag: 'Website', who: 'Apartment renovation', text: 'The website is done and everything works. It’s easy to use on a phone, prices and services are visible straight away. Got exactly what I wanted 👍' },
