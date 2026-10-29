@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { getDict } from '@/lib/i18n';
-import { ABOUT_PHOTO, REVIEWS_URL, type Locale } from '@/lib/site';
+import { ABOUT_PHOTO, type Locale } from '@/lib/site';
 import { publicFileExists } from '../project-cards';
-import { ArrowUpRight, Section, SectionHead } from '../ui';
+import { Section, SectionHead } from '../ui';
 
 const VIDEO = '/about/intro.mp4';
 
@@ -57,27 +57,6 @@ export function AboutSection({ locale }: { locale: Locale; num?: string }) {
         </div>
       </div>
 
-      {/* Отзывы клиентов — дословно, с источником для проверки */}
-      <div className="mt-16 border-t border-line pt-10">
-        <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
-          <h3 className="h3">{t.reviews.title}</h3>
-          <a href={REVIEWS_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-[15px] font-semibold text-accent hover:underline">
-            {t.reviews.source} · t.me/otzivyMDK
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
-        </div>
-        <ul className="mt-6 grid gap-4 md:grid-cols-2">
-          {t.reviews.items.map((r) => (
-            <li key={r.who}>
-              <figure className="flex h-full flex-col rounded-2xl border border-line bg-bg p-6">
-                <blockquote className="flex-1 text-[16px] leading-relaxed">{locale === 'ru' ? `«${r.text}»` : `“${r.text}”`}</blockquote>
-                <figcaption className="mt-4 text-[14px] text-muted">— {r.who}</figcaption>
-              </figure>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-4 text-[14px] text-muted">{t.reviews.note}</p>
-      </div>
     </Section>
   );
 }

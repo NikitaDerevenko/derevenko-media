@@ -367,20 +367,23 @@ export const en: Dict = {
     sub: 'What people I’ve worked with say. Translated from Russian.',
     items: [
       {
-        tag: 'VK Ads',
+        tag: 'VK Ads and Yandex Direct',
+        who: 'Candlelight concerts',
         text: 'This is what it looks like when someone really gets into the work. No need to find a designer and then someone else to set things up: Nikita makes the creatives, launches, checks what works and keeps optimising. With our previous agency we spent 5 million rubles over 8 months and got 15 purchases. Here — 15 purchases in a single week on a 50,000-ruble budget. We should have come sooner.',
       },
       {
         tag: 'Yandex Direct',
+        who: 'Barbershop, Simferopol',
         text: 'We used to have to ask what was happening with the ads and where the budget was going. Now Nikita writes first: what he checked, which ads he paused and what he suggests trying next. He prepares the creatives too — we just approve them. It’s really convenient when someone takes the work on and explains everything in plain language.',
       },
       {
         tag: 'Yandex Maps',
         text: 'Our map listing had two old photos and the wrong opening hours — we kept putting it off. Nikita set up the listing, organised the services and suggested which photos to reshoot. Now we’re happy to show it to people.',
       },
-      { tag: 'Website', text: 'The website is done and everything works. It’s easy to use on a phone, prices and services are visible straight away. Got exactly what I wanted 👍' },
+      { tag: 'Website', who: 'Apartment renovation', text: 'The website is done and everything works. It’s easy to use on a phone, prices and services are visible straight away. Got exactly what I wanted 👍' },
       {
         tag: 'Telegram bot',
+        who: 'Barbershop, Simferopol',
         text: 'I had no idea what the bot should look like. I explained what I needed in my own words, and Nikita showed me an example. Later we renamed the buttons so clients would understand them better — he helped with that too.',
       },
       {
@@ -389,9 +392,10 @@ export const en: Dict = {
       },
       {
         tag: 'Website',
+        who: 'MDK Regions',
         text: 'We didn’t click with the first design straight away — I wanted something calmer. We talked it through and changed the colours and a few blocks. I’m happy with the result, and glad the revisions were handled without fuss.',
       },
-      { tag: 'Repeat client', text: 'This is my second time. You just write what you need and get on with your own work. Thank you!' },
+      { tag: 'Website, repeat client', who: 'Laser hair removal studio', text: 'This is my second time. You just write what you need and get on with your own work. Thank you!' },
     ],
   },
   solutions: {
