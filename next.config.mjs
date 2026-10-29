@@ -14,9 +14,13 @@ export default function config(phase) {
     }
   }
   return {
+    // Сайт собирается в статичные файлы (папка out/) и публикуется на GitHub Pages — своего сервера нет.
+    // Заявки принимает функция в Яндекс Облаке (cloud/lead), адрес — NEXT_PUBLIC_LEAD_URL.
+    output: 'export',
     poweredByHeader: false,
     images: {
-      formats: ['image/avif', 'image/webp'],
+      // на статичном хостинге нет оптимизатора картинок: файлы в public/ уже в webp и нужного размера
+      unoptimized: true,
     },
   };
 }

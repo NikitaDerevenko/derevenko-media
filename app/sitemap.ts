@@ -2,6 +2,8 @@ import type { MetadataRoute } from 'next';
 import { isVisible, PROJECTS } from '@/lib/projects';
 import { DIRECTIONS, LOCALES, SITE } from '@/lib/site';
 
+export const dynamic = 'force-static';
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return LOCALES.flatMap((locale) => {
     const items = [

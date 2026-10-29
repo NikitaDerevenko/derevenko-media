@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { goal } from '@/lib/metrika';
-import { TELEGRAM_URL } from '@/lib/site';
+import { LEAD_URL, TELEGRAM_URL } from '@/lib/site';
 import { readUtm } from '@/lib/utm';
 import { useApp } from './providers';
 import { ConsentField } from './consent-field';
@@ -60,7 +60,8 @@ export function LeadForm({ variant, defaultDirection }: { variant: Variant; defa
     }
     setStatus('sending');
     try {
-      const res = await fetch('/api/lead', {
+      if (!LEAD_URL) throw new Error('NEXT_PUBLIC_LEAD_URL не задан');
+      const res = await fetch(LEAD_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

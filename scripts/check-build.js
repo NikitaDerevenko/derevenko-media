@@ -3,7 +3,8 @@
 const fs = require('fs');
 const path = require('path');
 
-const root = path.join(__dirname, '..', '.next');
+// проверяем то, что уйдёт на хостинг: статичную сборку out/ (и .next, если out/ нет)
+const root = fs.existsSync(path.join(__dirname, '..', 'out')) ? path.join(__dirname, '..', 'out') : path.join(__dirname, '..', '.next');
 const needle = ['example', 'com'].join('.');
 const hits = [];
 
@@ -25,4 +26,4 @@ if (hits.length) {
   console.error(`\n✗ В сборке найден ${needle}:\n  ${hits.slice(0, 20).join('\n  ')}\nПроверьте NEXT_PUBLIC_SITE_URL.\n`);
   process.exit(1);
 }
-console.log(`✓ В .next/ нет ${needle}`);
+console.log(`✓ В ${path.basename(root)}/ нет ${needle}`);

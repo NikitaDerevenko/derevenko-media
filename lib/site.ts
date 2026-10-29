@@ -34,6 +34,9 @@ export const SITE = {
 
 export const TELEGRAM_URL = `https://t.me/${SITE.telegram}`;
 
+/** Куда форма отправляет заявки: функция в Яндекс Облаке (cloud/lead). Пусто — форма предложит написать в Telegram. */
+export const LEAD_URL = process.env.NEXT_PUBLIC_LEAD_URL || '';
+
 /** Публичный канал с отзывами клиентов MDK Регионы — источник отзывов в «Обо мне» */
 export const REVIEWS_URL = 'https://t.me/otzivyMDK';
 
@@ -47,7 +50,7 @@ export const LEGAL = {
   /** Сервис ФНС «Проверить статус самозанятого» */
   checkUrl: 'https://npd.nalog.ru/check-status/',
   /** Дата редакции юридических документов */
-  updated: { ru: '25 октября 2026 года', en: '25 October 2026' },
+  updated: { ru: '29 октября 2026 года', en: '29 October 2026' },
 };
 
 /** false — в проектах выводится clientAnonymous, true — clientName (только с разрешения клиентов). */

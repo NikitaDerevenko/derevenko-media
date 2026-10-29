@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Никита Деревенко — реклама, карты и сайты для бизнеса</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="canonical" href="https://derevenko-media.ru/ru">
+<meta name="robots" content="noindex, follow">
+<script>
+  // «/» → /ru или /en по языку браузера; utm-метки и якорь сохраняются
+  (function () {
+    var langs = (navigator.languages || [navigator.language || '']).join(',').toLowerCase();
+    var en = /^en/.test(langs) && langs.indexOf('ru') === -1;
+    location.replace((en ? '/en' : '/ru') + location.search + location.hash);
+  })();
+</script>
+<meta http-equiv="refresh" content="0; url=/ru">
+</head>
+<body><a href="/ru">Перейти на сайт</a> · <a href="/en">English</a></body>
+</html>

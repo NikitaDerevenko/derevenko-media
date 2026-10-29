@@ -643,7 +643,8 @@ export const en: Dict = {
         h: 'Who receives the data',
         p: ['The operator does not sell personal data or disclose it to third parties, except where needed for the purposes above or required by law. The site relies on:'],
         list: [
-          'the site’s hosting provider — to store the data;',
+          'Yandex.Cloud LLC — to receive form submissions and store their copies on servers in Russia;',
+          'GitHub, Inc. (USA) — to host the site’s pages; when you open a page it receives technical request data (IP address, browser type), form data is not sent to it; this is a cross-border transfer based on your consent;',
           'the Telegram messenger — to deliver a new-request notification to the operator; this may involve cross-border transfer, which is based on your consent;',
           'Yandex LLC (Yandex Metrica) — only if you accept analytics cookies.',
         ],
@@ -700,7 +701,7 @@ export const en: Dict = {
         h: 'What actions',
         p: [
           'Collection, recording, organisation, accumulation, storage, updating, retrieval, use, transfer (provision, access), blocking, deletion and destruction — both automated and manual.',
-          'I agree to my data being transferred to the site’s hosting provider and to the Telegram messenger to deliver a request notification to the operator, including cross-border transfer.',
+          'I agree to my data being transferred to Yandex.Cloud LLC to receive and store the request on servers in Russia, and to the Telegram messenger to deliver a request notification to the operator, including cross-border transfer.',
         ],
       },
       {
