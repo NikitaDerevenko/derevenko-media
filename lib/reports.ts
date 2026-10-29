@@ -8,6 +8,9 @@ export type Week = { impressions: number; clicks: number; leads: number; spend: 
 
 export const REPORT_IDS: ReportId[] = ['direct', 'vk', 'google'];
 
+/** Какие отчёты показывать на каждом рынке: Google Ads в России не работает */
+export const REPORT_TABS: Record<'ru' | 'intl', ReportId[]> = { ru: ['direct', 'vk'], intl: ['google'] };
+
 export const REPORT_WEEKS: Record<ReportId, Week[]> = {
   direct: [
     { impressions: 11200, clicks: 392, leads: 11, spend: 9800 },

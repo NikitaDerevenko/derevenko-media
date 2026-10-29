@@ -3,14 +3,16 @@
 import { useState } from 'react';
 import { fill, plural } from '@/lib/i18n/helpers';
 import { goal } from '@/lib/metrika';
-import { REPORT_CURRENCY, REPORT_IDS, REPORT_WEEKS, totals, type ReportId } from '@/lib/reports';
+import { REPORT_CURRENCY, REPORT_TABS, REPORT_WEEKS, totals, type ReportId } from '@/lib/reports';
 import { useApp } from '../providers';
 import { Arrow, Check, Section, SectionHead, btn, cx } from '../ui';
 
 export function ReportsSection({ num }: { num: string }) {
   const { locale, dict, market } = useApp();
   const t = dict.reports;
-  const [tab, setTab] = useState<ReportId>(market === 'intl' ? 'google' : 'direct');
+  // вкладки зависят от рынка: в России — Директ и VK, за рубежом — Google Ads
+  const REPORT_IDS = REPORT_TABS[market];
+  const [tab, setTab] = useState<ReportId>(REPORT_IDS[0]);
 
   const nfLocale = locale === 'ru' ? 'ru-RU' : 'en-US';
   const currency = REPORT_CURRENCY[tab];
@@ -57,7 +59,7 @@ export function ReportsSection({ num }: { num: string }) {
     <Section id="reports">
       <SectionHead title={t.title} sub={t.sub} num={num} />
 
-      <div role="tablist" aria-label={t.title} className="mb-8 flex flex-wrap gap-2">
+      <div role="tablist" aria-label={t.title} className={cx('mb-8 flex flex-wrap gap-2', REPORT_IDS.length < 2 && 'hidden')}>
         {REPORT_IDS.map((id) => (
           <button
             key={id}
