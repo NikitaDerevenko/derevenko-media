@@ -388,6 +388,7 @@ export const en: Dict = {
       },
       {
         tag: 'Mini App',
+        who: 'Barbershop, Simferopol',
         text: 'What I liked most is that the catalogue opens right inside Telegram. We reworked the first version a bit: bigger photos and a shorter checkout. After that it became much more convenient.',
       },
       {
