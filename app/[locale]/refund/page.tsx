@@ -9,5 +9,5 @@ export async function generateMetadata({ params: paramsP }: { params: Promise<{ 
 
 export default async function RefundPage({ params: paramsP }: { params: Promise<{ locale: Locale }> }) {
   const params = await paramsP;
-  return <LegalPage id="terms" locale={params.locale} />;
+  return <LegalPage id="refund" locale={params.locale} />;
 }
