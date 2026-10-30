@@ -65,7 +65,7 @@ const TAG = {
   site: t('Сайт', 'Website'),
   landing: t('Лендинг', 'Landing page'),
   bot: t('Telegram-бот', 'Telegram bot'),
-  miniApp: t('Mini App', 'Mini App'),
+  miniApp: t('Мини-приложение', 'Mini App'),
 };
 
 const dish = (slug: string, n: number, ru: string, en: string): ProjectImage => ({
@@ -360,7 +360,7 @@ PROJECTS.push(
     tags: [TAG.bot, TAG.miniApp],
     clientName: t('Барбершоп «Контур»', 'Kontur barbershop'),
     clientAnonymous: t('Барбершоп «Контур»', 'Kontur barbershop'),
-    title: t('Онлайн-запись в барбершоп через Telegram: бот и Mini App', 'Online booking for a barbershop in Telegram: bot and Mini App'),
+    title: t('Онлайн-запись в барбершоп через Telegram: бот и мини-приложение', 'Online booking for a barbershop in Telegram: bot and Mini App'),
     summary: t(
       'Клиент выбирает услугу, мастера и время — и записывается, не выходя из Telegram.',
       'Clients pick a service, a barber and a time — and book without leaving Telegram.',
@@ -371,7 +371,7 @@ PROJECTS.push(
     ),
     steps: [
       t('Бот: выбор услуги → время → подтверждение, с ценой и длительностью.', 'Bot: service → time → confirmation, with price and duration.'),
-      t('Mini App: экран с услугами, мастерами и календарём свободного времени.', 'Mini App: a screen with services, barbers and a calendar of free slots.'),
+      t('Мини-приложение: экран с услугами, мастерами и календарём свободного времени.', 'Mini App: a screen with services, barbers and a calendar of free slots.'),
       t('Перенос и отмена записи кнопкой, напоминание клиенту.', 'Reschedule or cancel with one button, plus a reminder to the client.'),
       t('Уведомление мастеру и администратору о каждой записи.', 'A notification to the barber and the admin for every booking.'),
     ],
@@ -389,7 +389,7 @@ PROJECTS.push(
     tags: [TAG.maps, TAG.bot, TAG.miniApp],
     clientName: t('Цветочная мастерская «Лепесток»', 'Lepestok flower studio'),
     clientAnonymous: t('Цветочная мастерская «Лепесток»', 'Lepestok flower studio'),
-    title: t('Цветочный магазин: карточка на картах, бот-подборщик и Mini App с доставкой', 'Flower shop: map listing, bouquet bot and a delivery Mini App'),
+    title: t('Цветочный магазин: карточка на картах, бот-подборщик и мини-приложение с доставкой', 'Flower shop: map listing, bouquet bot and a delivery Mini App'),
     summary: t(
       'Покупатель находит магазин на картах, подбирает букет под повод и бюджет и оформляет доставку в Telegram.',
       'Shoppers find the store on the map, pick a bouquet by occasion and budget, and order delivery in Telegram.',
@@ -401,7 +401,7 @@ PROJECTS.push(
     steps: [
       t('Карточка на Яндекс Картах: витрина букетов с ценами и обложки историй с кнопкой «Позвонить».', 'Yandex Maps listing: a bouquet showcase with prices and story covers with a Call button.'),
       t('Бот-подборщик: повод → бюджет → готовый вариант с фото и ценой.', 'Bouquet bot: occasion → budget → a ready option with photo and price.'),
-      t('Mini App: каталог, корзина, открытка, время доставки и оплата.', 'Mini App: catalogue, cart, card message, delivery slot and payment.'),
+      t('Мини-приложение: каталог, корзина, открытка, время доставки и оплата.', 'Mini App: catalogue, cart, card message, delivery slot and payment.'),
     ],
     results: [],
     cover: shot('solution-lepestok/cover', 'Мобильная карточка цветочного магазина на Яндекс Картах', 'Mobile listing for a flower shop on Yandex Maps'),

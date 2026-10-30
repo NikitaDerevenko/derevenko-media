@@ -4,7 +4,7 @@ import { fill, getDict } from '@/lib/i18n';
 import type { LegalDoc } from '@/lib/i18n/ru';
 import { LEGAL, SITE, type Locale } from '@/lib/site';
 
-export const LEGAL_PAGES = ['privacy', 'consent', 'terms'] as const;
+export const LEGAL_PAGES = ['privacy', 'consent', 'terms', 'refund'] as const;
 export type LegalPageId = (typeof LEGAL_PAGES)[number];
 
 /** Документ страницы и подпись ссылки на него в подвале */
@@ -12,6 +12,7 @@ function docOf(id: LegalPageId, locale: Locale): { doc: LegalDoc; label: string 
   const d = getDict(locale);
   if (id === 'privacy') return { doc: d.privacy, label: d.footer.privacy };
   if (id === 'consent') return { doc: d.consentDoc, label: d.footer.consent };
+  if (id === 'refund') return { doc: d.refund, label: d.footer.refund };
   return { doc: d.terms, label: d.footer.terms };
 }
 
@@ -67,7 +68,7 @@ export function LegalPage({ id, locale }: { id: LegalPageId; locale: Locale }) {
         ))}
       </ol>
       <nav aria-label={dict.legal.related} className="mt-14 border-t border-line pt-6">
-        <p className="caps text-muted">{dict.legal.related}</p>
+        <p className="text-[15px] font-semibold">{dict.legal.related}</p>
         <ul className="mt-3 flex flex-col gap-2 text-[16px]">
           {LEGAL_PAGES.filter((x) => x !== id).map((x) => (
             <li key={x}>

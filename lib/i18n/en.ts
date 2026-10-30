@@ -597,6 +597,8 @@ export const en: Dict = {
     privacy: 'Privacy policy',
     consent: 'Consent to data processing',
     terms: 'Terms of work',
+    refund: 'Cancellation and refunds',
+    age: '0+',
     hours: 'Mon–Fri, 8 am–6 pm Moscow time',
     requisites: '{name} · self-employed (Russian professional income tax) · Tax ID (INN) {inn}',
     checkStatus: 'Check status with the tax service',
@@ -686,6 +688,17 @@ export const en: Dict = {
         p: ['Data is transmitted over HTTPS, only the operator can access requests, and the forms are protected against automated submissions.'],
       },
       {
+        id: 'incidents',
+        h: 'What the operator does in case of a data breach',
+        p: ['If personal data is unlawfully or accidentally disclosed (a breach), the operator acts under Part 3.1 of Article 21 of Federal Law 152-FZ:'],
+        list: [
+          'within 24 hours of detecting the breach, notifies Roskomnadzor: what happened, the presumed causes and harm, the measures taken and a contact person;',
+          'within 72 hours, reports to Roskomnadzor the results of the internal investigation and the persons responsible, if identified;',
+          'takes measures to stop the breach and limit its consequences, and informs the people whose data was affected;',
+          'cooperates with the state system for detecting computer attacks (GosSOPKA) as required by law.',
+        ],
+      },
+      {
         h: 'Changes to this policy',
         p: ['The operator may update this policy. The current version is always published on this page.'],
       },
@@ -757,6 +770,38 @@ export const en: Dict = {
           'Rights to the work delivered under a contract (website, copy, design, bot code) pass to the client as set out in the contract.',
         ],
       },
+    ],
+  } as LegalDoc,
+  refund: {
+    title: 'Cancellation and refunds',
+    intro:
+      'How clients of {name}, self-employed (Russian professional income tax), Tax ID (INN) {inn}, can cancel a service and get a refund. Based on Article 32 of the Russian Consumer Rights Protection Law and Article 782 of the Civil Code. The exact terms for your project are set out in the contract.',
+    sections: [
+      { h: 'You can cancel at any time', p: ['You can cancel at any stage — before work starts or while it is in progress — with no penalties and no reason required. Just message me on Telegram {telegram}{email}.'] },
+      {
+        h: 'How much is refunded',
+        list: [
+          'if work has not started — the full prepayment;',
+          'if work has started — the prepayment minus the cost of completed stages and expenses actually incurred; I send the breakdown with my reply;',
+          'the results of paid, completed stages (copy, mock-ups, configured campaigns, code) stay with you.',
+        ],
+      },
+      {
+        h: 'What is not refunded by me',
+        list: [
+          'ad budget: you pay it directly to the ad platform, and any unspent balance is refunded under that platform’s rules;',
+          'third-party services registered in your name: domain, hosting, paid fonts and photos, CRM and payment provider fees.',
+        ],
+      },
+      { h: 'Refund timing and method', p: ['Money is returned within 10 days of receiving your cancellation, by the original payment method or to the details you provide. A correction receipt is issued in the “My Tax” app.'] },
+      {
+        h: 'If the work has defects',
+        p: [
+          'If the result does not match the contract, you can ask for the defects to be fixed free of charge, a proportionate price reduction, or cancellation with a refund for that stage (Article 29 of the Consumer Rights Protection Law).',
+          'Not getting a specific number of leads or sales is not a defect: ad results depend on the product, prices, competition and budget (see Terms of work).',
+        ],
+      },
+      { h: 'Deadline guarantee', p: ['If a stage launches later than the contract date through my fault, the price of that stage is reduced by 20%.'] },
     ],
   } as LegalDoc,
   notFound: { title: 'Page not found', back: 'Back to home' },

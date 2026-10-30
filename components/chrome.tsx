@@ -32,7 +32,7 @@ export function Footer() {
           <span className="text-muted">{dict.footer.hours}</span>
         </div>
         <nav aria-label={dict.footer.terms} className="flex flex-col gap-2 text-[14px] text-muted">
-          {(['privacy', 'consent', 'terms'] as const).map((id) => (
+          {(['privacy', 'consent', 'terms', 'refund'] as const).map((id) => (
             <Link key={id} prefetch={false} href={`/${locale}/${id}`} className="hover:text-ink">
               {dict.footer[id]}
             </Link>
@@ -48,7 +48,13 @@ export function Footer() {
           </a>
         </p>
         <p>{dict.footer.notOffer}</p>
-        <p>{fill(dict.footer.copyright, { year: String(new Date().getFullYear()) })}</p>
+        <p>
+          {fill(dict.footer.copyright, { year: String(new Date().getFullYear()) })}
+          {/* возрастная маркировка информационной продукции (436-ФЗ) */}
+          <span className="ml-3 rounded border border-line px-1.5 py-0.5 text-[12px] font-semibold text-ink/70">
+            {dict.footer.age}
+          </span>
+        </p>
       </div>
     </footer>
   );
@@ -88,7 +94,7 @@ export function StickyCta() {
   }, [pathname]);
 
   // на юридических страницах кнопка мешает читать документ
-  const isLegal = /\/(privacy|consent|terms)$/.test(pathname);
+  const isLegal = /\/(privacy|consent|terms|refund)$/.test(pathname);
   const visible = show && !formVisible && !isLegal;
   return (
     <div
