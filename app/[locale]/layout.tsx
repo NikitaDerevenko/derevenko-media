@@ -77,6 +77,7 @@ export default async function LocaleLayout({ children, params: paramsP }: { chil
     founder: { '@type': 'Person', name: dict.about.name, jobTitle: dict.about.role, taxID: LEGAL.inn, image: `${SITE.url}/about/photo.jpg` },
     areaServed: locale === 'ru' ? ['RU', 'Europe', 'US'] : ['Europe', 'US'],
     sameAs: [TELEGRAM_URL],
+    ...(SITE.email ? { email: SITE.email } : {}),
   };
 
   return (

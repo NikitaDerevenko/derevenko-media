@@ -23,7 +23,12 @@ function vars(locale: Locale) {
     inn: LEGAL.inn,
     site: SITE.url.replace(/^https?:\/\//, ''),
     telegram: `@${SITE.telegram}`,
-    email: SITE.email ? (locale === 'ru' ? ` или email ${SITE.email}` : ` or email ${SITE.email}`) : '',
+    email: [
+      SITE.phone && (locale === 'ru' ? `, в WhatsApp, Telegram или MAX по номеру ${SITE.phone}` : `, via WhatsApp, Telegram or MAX at ${SITE.phone}`),
+      SITE.email && (locale === 'ru' ? ` или на email ${SITE.email}` : ` or by email at ${SITE.email}`),
+    ]
+      .filter(Boolean)
+      .join(''),
   };
 }
 

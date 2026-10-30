@@ -28,8 +28,10 @@ export const SITE = {
   url: rawUrl.replace(/\/$/, ''),
   telegram: 'NikitaDerevenko',
   // Пустая строка — контакт не выводится на сайте.
-  email: '',
-  phone: '',
+  email: 'nikita.derevenko@yandex.ru',
+  /** Номер для мессенджеров (WhatsApp, Telegram, MAX). Звонки не принимаются — ссылки tel: не выводим. */
+  phone: '+7 996 939-74-94',
+  phoneDigits: '79969397494',
 };
 
 export const TELEGRAM_URL = `https://t.me/${SITE.telegram}`;

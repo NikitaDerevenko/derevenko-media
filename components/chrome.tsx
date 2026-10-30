@@ -24,6 +24,11 @@ export function Footer() {
           <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className="font-semibold hover:text-accent">
             Telegram: @{SITE.telegram}
           </TrackedLink>
+          {SITE.phone && (
+            <span>
+              <span className="font-semibold">{SITE.phone}</span> <span className="text-muted">— {dict.footer.messengers}</span>
+            </span>
+          )}
           {SITE.email && (
             <TrackedLink goalName="click_email" href={`mailto:${SITE.email}`} className="font-semibold hover:text-accent">
               {SITE.email}

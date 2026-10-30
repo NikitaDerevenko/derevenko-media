@@ -600,6 +600,7 @@ export const en: Dict = {
     refund: 'Cancellation and refunds',
     age: '0+',
     hours: 'Mon–Fri, 8 am–6 pm Moscow time',
+    messengers: 'WhatsApp, Telegram, MAX',
     requisites: '{name} · self-employed (Russian professional income tax) · Tax ID (INN) {inn}',
     checkStatus: 'Check status with the tax service',
     notOffer: 'Nothing on this site is a public offer.',

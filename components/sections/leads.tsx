@@ -64,6 +64,22 @@ export function StartSection({ locale, defaultDirection, primary = 'audit' }: { 
             <TelegramIcon className="h-[18px] w-[18px]" />
             {dict.hero.ctaSecondary}
           </TrackedLink>
+          {(SITE.phone || SITE.email) && (
+            <ul className="mt-4 space-y-1 text-[15px]">
+              {SITE.phone && (
+                <li>
+                  <span className="font-semibold">{SITE.phone}</span> <span className="text-muted">— {dict.footer.messengers}</span>
+                </li>
+              )}
+              {SITE.email && (
+                <li>
+                  <TrackedLink goalName="click_email" href={`mailto:${SITE.email}`} className="font-semibold text-accent hover:underline">
+                    {SITE.email}
+                  </TrackedLink>
+                </li>
+              )}
+            </ul>
+          )}
 
           <h3 className="mt-12 text-[17px] font-semibold">{s.after.title}</h3>
           <ol className="mt-4 space-y-4">

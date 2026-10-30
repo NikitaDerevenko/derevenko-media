@@ -648,6 +648,7 @@ export const ru = {
     refund: 'Отказ от услуги и возврат',
     age: '0+',
     hours: 'Пн–пт 8:00–18:00 МСК',
+    messengers: 'WhatsApp, Telegram, MAX',
     requisites: '{name} · самозанятый (НПД) · ИНН {inn}',
     checkStatus: 'Проверить статус в ФНС',
     notOffer: 'Информация на сайте не является публичной офертой.',
