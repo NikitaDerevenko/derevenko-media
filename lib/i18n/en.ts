@@ -585,6 +585,14 @@ export const en: Dict = {
       },
     ],
   },
+  scene: {
+    caption: 'Real work: a business listing before and after',
+    before: 'How they see you',
+    beforeText: 'Dark phone photos with random backgrounds — next to competitors with appetising shots.',
+    after: 'How they choose you',
+    afterText: 'Same business, same products. Light, colour and one consistent style.',
+    link: 'Read the case',
+  },
   miniAudit: {
     title: '30-second express audit',
     sub: 'Pick your niche and what you already have — I’ll show what to fix first.',
