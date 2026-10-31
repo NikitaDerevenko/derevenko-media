@@ -585,6 +585,17 @@ export const en: Dict = {
       },
     ],
   },
+  bento: {
+    title: 'What you get in the free audit',
+    sub: 'I look at your listing, ads or website the way a customer does — and send you what is costing you leads.',
+    compare: { title: 'You vs your 3 nearest competitors', text: 'Photos, rating, reviews and completeness — side by side, in one picture.', you: 'You', rival: 'Competitor', sample: 'Format example, figures are illustrative', rating: 'rating', reviews: 'reviews' },
+    budget: { title: 'Where the budget leaks', text: 'Junk queries, night-time impressions, the wrong area.' },
+    first: { title: 'What to do first', text: '1–2 actions with the fastest effect.' },
+    plan: { title: 'Budget and timeline estimate', text: 'What to plan for ads in your niche and city.' },
+    term: { value: '24 h', text: 'reply on business days' },
+    free: { value: '$0', text: 'no strings attached' },
+    cta: 'Get the audit',
+  },
   scene: {
     caption: 'Real work: a business listing before and after',
     before: 'How they see you',
@@ -833,5 +844,5 @@ export const en: Dict = {
       { h: 'Deadline guarantee', p: ['If a stage launches later than the contract date through my fault, the price of that stage is reduced by 20%.'] },
     ],
   } as LegalDoc,
-  notFound: { title: 'Page not found', back: 'Back to home' },
+  notFound: { title: 'This page didn’t pay off', text: 'It’s gone — like ads without conversion tracking. Let’s get you back to what works.', back: 'Back to home', audit: 'Get a free audit' },
 };

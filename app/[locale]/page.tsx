@@ -1,5 +1,6 @@
 import { Hero } from '@/components/hero';
 import { AboutSection } from '@/components/sections/about';
+import { BentoSection } from '@/components/sections/bento';
 import { MiniAuditSection } from '@/components/sections/mini-audit';
 import { ScrollScene } from '@/components/sections/scroll-scene';
 import { getDict } from '@/lib/i18n';
@@ -30,6 +31,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
       <ProjectsSection locale={locale} />
       <AboutSection locale={locale} />
       <TestimonialsSection locale={locale} />
+      <BentoSection locale={locale} />
       <PricingSection locale={locale} />
       <ProcessSection locale={locale} />
       <BotsSection locale={locale} />

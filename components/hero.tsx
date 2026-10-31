@@ -1,7 +1,9 @@
 import Image from 'next/image';
+import { Fragment } from 'react';
 import Link from 'next/link';
 import { getDict } from '@/lib/i18n';
 import { TELEGRAM_URL, formatMoney, type Locale } from '@/lib/site';
+import { CountUp } from './count-up';
 import { TrackedLink } from './tracked-link';
 import { Arrow, btn, Check, cx, TelegramIcon } from './ui';
 
@@ -25,7 +27,18 @@ export function Hero({ locale }: { locale: Locale }) {
     <section className="border-b border-line bg-bg">
       <div className="container grid gap-12 pb-14 pt-10 md:pb-20 md:pt-16 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:items-center lg:gap-16">
         <div>
-          <h1 className="h1 max-w-[19ch]">{h.h1}</h1>
+          <h1 className="h1 max-w-[19ch]">
+            {/* слова появляются по очереди — одна анимация при загрузке; текст для поиска и скринридеров цельный */}
+            {h.h1.split(' ').map((w, i) => (
+              <Fragment key={i}>
+                <span className="word-mask">
+                  <span className="word-in" style={{ animationDelay: `${80 + i * 45}ms` }}>
+                    {w}
+                  </span>
+                </span>{' '}
+              </Fragment>
+            ))}
+          </h1>
           <p className="mt-6 max-w-[56ch] text-[17px] leading-relaxed text-muted md:text-lg">{h.sub}</p>
 
           {/* На телефоне большая карточка с цифрами не помещается в первый экран — показываем её суть одной строкой */}
@@ -87,7 +100,7 @@ export function Hero({ locale }: { locale: Locale }) {
             <div>
               <div className="flex items-baseline justify-between gap-4">
                 <dt className="text-[15px] text-muted">{h.proof.spend}</dt>
-                <dd className="text-[22px] font-semibold">{rub(PROOF.spend)}</dd>
+                <dd className="text-[22px] font-semibold"><CountUp value={PROOF.spend} locale={locale === 'ru' ? 'ru-RU' : 'en-US'} suffix=" ₽" /></dd>
               </div>
               <div className="mt-2 h-3 rounded-full bg-surface" aria-hidden="true">
                 <div className="hero-bar h-3 rounded-full bg-muted/50" style={{ width: `${spendShare}%` }} />
@@ -96,7 +109,7 @@ export function Hero({ locale }: { locale: Locale }) {
             <div>
               <div className="flex items-baseline justify-between gap-4">
                 <dt className="text-[15px] text-muted">{h.proof.revenue}</dt>
-                <dd className="text-[22px] font-semibold text-accent">{rub(PROOF.revenue)}</dd>
+                <dd className="text-[22px] font-semibold text-accent"><CountUp value={PROOF.revenue} locale={locale === 'ru' ? 'ru-RU' : 'en-US'} suffix=" ₽" /></dd>
               </div>
               <div className="mt-2 h-3 rounded-full bg-surface" aria-hidden="true">
                 <div className="hero-bar hero-bar-late h-3 rounded-full bg-accent" style={{ width: '100%' }} />

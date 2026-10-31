@@ -247,3 +247,21 @@ details[open] .faq-icon {
   transform-origin: left center;
   animation: hero-bar 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
 }
+
+/* Заголовок первого экрана: слова выезжают снизу из-под маски */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.word-in {
+  display: inline-block;
+  animation: word-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) backwards;
+}
+@keyframes word-in {
+  from {
+    transform: translateY(105%);
+  }
+}
