@@ -26,7 +26,7 @@ const { en } = loadTs('lib/i18n/en.ts');
 const DIRECTIONS = ['promotion', 'websites', 'telegram-bots', 'mini-apps'];
 
 // Палитра — как в app/globals.css
-const C = { bg: '#FFFFFF', ink: '#161A1D', muted: '#586067', accent: '#146E4A', onAccent: '#FFFFFF', line: '#E1E4E0' };
+const C = { bg: '#FFFFFF', ink: '#111216', muted: '#5D626B', accent: '#FF4D1F', onAccent: '#FFFFFF', line: '#E3E5E9' };
 
 const font = (f) => fs.readFileSync(path.join(root, 'assets', 'og', f));
 // Латиница и кириллица — разные файлы: даём им разные имена, satori берёт недостающие глифы из следующего шрифта

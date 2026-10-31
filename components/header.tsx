@@ -33,10 +33,10 @@ export function Header({ missingInOther = [] }: { missingInOther?: string[] }) {
 
   const links = [
     { href: `${home}#projects`, label: dict.nav.projects },
-    { href: `${home}#about`, label: dict.nav.about },
-    { href: `${home}#reviews`, label: dict.nav.reviews },
     { href: `${home}#pricing`, label: dict.nav.pricing },
-    { href: `${home}#faq`, label: dict.nav.faq },
+    { href: `${home}#process`, label: dict.nav.process },
+    { href: `${home}#reviews`, label: dict.nav.reviews },
+    { href: `${home}#about`, label: dict.nav.about },
   ];
 
   return (
@@ -75,7 +75,7 @@ export function Header({ missingInOther = [] }: { missingInOther?: string[] }) {
             >
               {dict.langSwitch.other}
             </Link>
-            <a href={`${home}#start`} className={cx('hidden rounded-full bg-accent px-5 text-[15px] font-semibold text-onaccent transition hover:bg-accent-dark sm:inline-flex sm:items-center', scrolled && !open ? 'h-10' : 'h-11')}>
+            <a href={`${home}#start`} className={cx('hidden rounded-[12px] bg-accent px-5 text-[15px] font-semibold text-onaccent transition hover:bg-accent-dark sm:inline-flex sm:items-center', scrolled && !open ? 'h-10' : 'h-11')}>
               {dict.nav.cta}
             </a>
             <button
@@ -105,7 +105,7 @@ export function Header({ missingInOther = [] }: { missingInOther?: string[] }) {
               </li>
             ))}
             <li className="pt-5">
-              <a href={`${home}#start`} onClick={() => setOpen(false)} className="flex w-full justify-center rounded-[10px] bg-accent px-6 py-4 font-semibold text-onaccent">
+              <a href={`${home}#start`} onClick={() => setOpen(false)} className="flex w-full justify-center rounded-[14px] bg-accent px-6 py-4 font-semibold text-onaccent">
                 {dict.nav.cta}
               </a>
             </li>

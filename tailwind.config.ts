@@ -18,7 +18,7 @@ const config: Config = {
         line: v('line'),
         ink: v('ink'),
         muted: v('muted'),
-        accent: { DEFAULT: v('accent'), dark: v('accent-dark'), soft: v('accent-soft') },
+        accent: { DEFAULT: v('accent'), dark: v('accent-dark'), soft: v('accent-soft'), text: v('accent-text') },
         dark: { DEFAULT: v('dark'), 2: v('dark-2'), line: v('dark-line'), muted: v('dark-muted') },
         lime: v('lime'),
         onaccent: v('on-accent'),
@@ -26,6 +26,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
       },
       letterSpacing: {
         caps: '0.08em',

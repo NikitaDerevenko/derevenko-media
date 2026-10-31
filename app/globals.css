@@ -32,6 +32,22 @@
   src: url('/fonts/onest-rub.woff2') format('woff2');
   unicode-range: U+20BD;
 }
+@font-face {
+  font-family: 'Unbounded';
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('/fonts/unbounded-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2212;
+}
+@font-face {
+  font-family: 'Unbounded';
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url('/fonts/unbounded-cyrillic-wght-normal.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
 /* Подогнанный системный шрифт на время загрузки — без скачка вёрстки */
 @font-face {
   font-family: 'Onest Fallback';
@@ -44,31 +60,33 @@
 
 /*
  * Палитра — единственное место, где заданы цвета. Значения — RGB-тройки для Tailwind (rgb(var(--x) / alpha)).
- * Белый фон, графитовый текст, один глубокий зелёный акцент — «цвет денег и роста».
- * Контраст: --muted на --bg ≈ 6.3:1, на --surface ≈ 5.8:1; --accent на --bg ≈ 6:1.
+ * Белый фон, графитовый текст, один смелый оранжевый акцент (кнопки, плашки, крупные цифры).
+ * Для мелкого текста акцентом — --accent-text (контраст на белом ≈ 5.3:1), см. .text-accent ниже.
  */
 :root {
   color-scheme: light;
   --font-sans: 'Onest', 'Onest Fallback';
+  --font-display: 'Unbounded', 'Onest', 'Onest Fallback';
 
   --bg: 255 255 255; /* #FFFFFF */
-  --surface: 245 246 243; /* #F5F6F3 — второй тон секций */
-  --line: 225 228 224; /* #E1E4E0 — тонкие границы */
-  --ink: 22 26 29; /* #161A1D — графит */
-  --muted: 88 96 103; /* #586067 — вторичный текст */
+  --surface: 242 243 245; /* #F2F3F5 — второй тон секций */
+  --line: 227 229 233; /* #E3E5E9 — тонкие границы */
+  --ink: 17 18 22; /* #111216 — графит */
+  --muted: 93 98 107; /* #5D626B — вторичный текст */
 
-  --accent: 20 110 74; /* #146E4A — единственный акцент */
-  --accent-dark: 13 84 56; /* #0D5438 */
-  --accent-soft: 228 242 234; /* #E4F2EA — подложка под цифры и выделения */
+  --accent: 255 77 31; /* #FF4D1F — единственный акцент */
+  --accent-dark: 230 62 18; /* #E63E12 — наведение на кнопку */
+  --accent-soft: 255 237 230; /* #FFEDE6 — подложка под выделения */
+  --accent-text: 200 51 12; /* #C8330C — акцентный мелкий текст */
   --on-accent: 255 255 255;
 
-  /* Тёмные тона — только для макетов устройств и редких тёмных вставок */
-  --dark: 27 33 36; /* #1B2124 */
-  --dark-2: 36 43 47; /* #242B2F */
-  --dark-line: 52 61 66; /* #343D42 */
-  --dark-muted: 176 184 189;
+  /* Тёмные тона — тёмные блоки и макеты устройств */
+  --dark: 17 18 22; /* #111216 */
+  --dark-2: 30 32 38; /* #1E2026 */
+  --dark-line: 51 54 62; /* #33363E */
+  --dark-muted: 166 170 179;
 
-  --lime: 143 214 174; /* #8FD6AE — маркер на тёмном */
+  --lime: 255 138 101; /* #FF8A65 — маркер на тёмном */
 
   --device: 27 28 32; /* корпус телефона и рамка ноутбука */
   --device-body: 196 198 204;
@@ -97,6 +115,11 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Мелкий текст акцентом — темнее заливки, чтобы читался */
+.text-accent {
+  color: rgb(var(--accent-text));
+}
+
 ::selection {
   background: rgb(var(--accent) / 0.18);
 }
@@ -112,11 +135,11 @@ body {
     @apply text-[14px] font-medium text-muted;
   }
   .h1 {
-    @apply text-[34px] font-semibold leading-[1.08] tracking-[-0.025em] sm:text-[44px] lg:text-[56px];
+    @apply font-display text-[30px] font-semibold leading-[1.08] tracking-[-0.035em] sm:text-[40px] lg:text-[52px];
     text-wrap: balance;
   }
   .h2 {
-    @apply text-[28px] font-semibold leading-[1.12] tracking-[-0.02em] sm:text-[34px] lg:text-[40px];
+    @apply font-display text-[26px] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[32px] lg:text-[40px];
     text-wrap: balance;
   }
   .h3 {

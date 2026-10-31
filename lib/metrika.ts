@@ -6,6 +6,8 @@ export type Goal =
   | 'audit_request'
   | 'lead_form_success'
   | 'calc_used'
+  | 'calc_done'
+  | 'calc_cta'
   | `report_tab_${string}`
   | `project_open_${string}`
   | 'before_after_drag'

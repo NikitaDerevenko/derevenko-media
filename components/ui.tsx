@@ -5,12 +5,12 @@ export function cx(...parts: (string | false | null | undefined)[]) {
 }
 
 const base =
-  'inline-flex items-center justify-center gap-2 rounded-[10px] text-[16px] font-semibold leading-none transition active:scale-[.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+  'inline-flex items-center justify-center gap-2 rounded-[14px] text-[16px] font-semibold leading-none transition active:scale-[.98] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
 
-/** Главная кнопка — зелёная заливка; вторая — спокойная обводка в цвет текста */
+/** Главная кнопка — оранжевая заливка; вторая — спокойная обводка в цвет текста */
 export const btn = {
   primary: `${base} bg-accent px-6 py-[15px] text-onaccent hover:bg-accent-dark`,
-  secondary: `${base} border border-line bg-bg px-6 py-[14px] text-ink hover:border-ink`,
+  secondary: `${base} border-[1.5px] border-ink bg-bg px-6 py-[14px] text-ink hover:bg-ink hover:text-onaccent`,
   /** Контурная на тёмном фоне */
   secondaryDark: `${base} border border-dark-line px-6 py-[14px] text-onaccent hover:border-onaccent`,
   link: 'inline-flex items-center gap-1.5 text-[16px] font-semibold text-accent underline-offset-4 hover:underline',
@@ -134,7 +134,7 @@ export function TelegramIcon({ className }: { className?: string }) {
 /** Словесный знак: имя и фамилия. name передаётся из словаря (RU/EN). */
 export function Logo({ className, dark, name = 'Nikita Derevenko' }: { className?: string; dark?: boolean; name?: string }) {
   return (
-    <span className={cx('block whitespace-nowrap text-[18px] font-semibold tracking-[-0.01em]', dark ? 'text-onaccent' : 'text-ink', className)}>
+    <span className={cx('block whitespace-nowrap font-display text-[16px] font-semibold tracking-[-0.02em] sm:text-[17px]', dark ? 'text-onaccent' : 'text-ink', className)}>
       {name}
     </span>
   );

@@ -86,6 +86,8 @@ export default async function LocaleLayout({ children, params: paramsP }: { chil
         {/* Шрифт первого экрана грузим сразу, вместе с HTML */}
         <link rel="preload" href="/fonts/onest-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         {locale === 'ru' && <link rel="preload" href="/fonts/onest-cyrillic.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />}
+        {/* Unbounded — шрифт заголовков */}
+        <link rel="preload" href={locale === 'ru' ? '/fonts/unbounded-cyrillic-wght-normal.woff2' : '/fonts/unbounded-latin-wght-normal.woff2'} as="font" type="font/woff2" crossOrigin="anonymous" />
         {/* Отмечаем, что JS работает — для слайдера до/после без сдвига вёрстки */}
         {/* + прячем баннер cookie до первой отрисовки, если выбор уже сделан */}
         <script
