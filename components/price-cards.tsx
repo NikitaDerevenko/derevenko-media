@@ -1,6 +1,7 @@
 import { fill, getDict } from '@/lib/i18n';
-import { packagePrice, servicePrice } from '@/lib/pricing';
-import { DIRECTION_SERVICES, formatMoney, marketOf, RECOMMENDED_PACKAGE, SERVICES, type DirectionId, type Locale, type PackageId, type ServiceId } from '@/lib/site';
+import { packagePrice, promoPrice, servicePrice } from '@/lib/pricing';
+import { DIRECTION_SERVICES, formatMoney, marketOf, PROMO, RECOMMENDED_PACKAGE, SERVICES, type DirectionId, type Locale, type PackageId, type ServiceId } from '@/lib/site';
+import { PromoPrice } from './promo';
 import { btn, Check, cx } from './ui';
 
 type CardData = {
@@ -8,6 +9,8 @@ type CardData = {
   label: string;
   name: string;
   price: string;
+  /** цена по акции, если действует */
+  promo?: string | null;
   term?: string;
   includes: string[];
   extra?: string;
@@ -30,7 +33,9 @@ function PriceCard({ c, dark, termLabel, extraLabel }: { c: CardData; dark: bool
         <h3 className="text-[20px] font-semibold leading-tight">{c.name}</h3>
         {c.highlight && <span className="shrink-0 rounded-md bg-accent-soft px-2 py-1 text-[13px] font-medium leading-tight text-accent-dark">{c.highlight}</span>}
       </div>
-      <p className="mt-4 text-[28px] font-semibold leading-none tracking-[-0.02em]">{c.price}</p>
+      <p className="mt-4 text-[28px] font-semibold leading-none tracking-[-0.02em]">
+        {c.promo ? <PromoPrice regular={c.price} promo={c.promo} until={PROMO.until} /> : c.price}
+      </p>
       <p className={cx('mt-2 min-h-[1.5rem] text-[14px]', dark ? 'text-dark-muted' : 'text-muted')}>{c.term ? `${termLabel}: ${c.term}` : ' '}</p>
       <ul className={cx('mt-5 flex-1 space-y-2 border-t pt-5 text-[15px] leading-snug', dark ? 'border-dark-line' : 'border-line')}>
         {c.includes.map((i) => (
@@ -72,6 +77,7 @@ export function DirectionPrices({ direction, locale, dark = false, base }: { dir
       label: row?.monthly ? p.labels.monthly : row?.price === null ? p.labels.custom : p.labels.once,
       name: s[id].name,
       price: servicePrice(id, market, locale, w),
+      promo: promoPrice('service', id, market, locale, w),
       term: s[id].term,
       includes: s[id].scope.split(/;\s*/).filter(Boolean),
       extra,
@@ -91,6 +97,7 @@ export function DirectionPrices({ direction, locale, dark = false, base }: { dir
       label: p.labels.package,
       name: pk.items[id].name,
       price: packagePrice(id, market, locale, w),
+      promo: promoPrice('package', id, market, locale, w),
       term: pk.items[id].term,
       includes: pk.items[id].items,
       extra: pk.items[id].extra ? fill(pk.items[id].extra!, { adsManage }) : extra,
@@ -126,7 +133,13 @@ export function DirectionPrices({ direction, locale, dark = false, base }: { dir
                   {s[id].scope}
                   {s[id].term ? ` · ${s[id].term}` : ''}
                 </span>
-                <span className="num text-[16px] font-semibold md:text-right">{servicePrice(id, market, locale, w)}</span>
+                <span className="num text-[16px] font-semibold md:text-right">
+                  {(() => {
+                    const pr = promoPrice('service', id, market, locale, w);
+                    const reg = servicePrice(id, market, locale, w);
+                    return pr ? <PromoPrice regular={reg} promo={pr} until={PROMO.until} className="md:justify-end" /> : reg;
+                  })()}
+                </span>
               </li>
             ))}
           </ul>

@@ -215,6 +215,32 @@ export const PACKAGES: Record<Market, Record<PackageId, Price>> = {
   ru: { card: 9900, start: 22900, growth: 59000 },
   intl: { card: 199, start: 449, growth: 1290 },
 };
+/**
+ * Сезонная акция. Скидка считается автоматически от цен выше: percent от «от …» и от границ диапазона.
+ * После даты until акция пропадает с сайта сама (баннер и зачёркнутые цены скрываются в браузере).
+ * Чтобы выключить — enabled: false; чтобы запустить новую — поменять название, дату и список услуг.
+ */
+export const PROMO = {
+  enabled: true,
+  percent: 20,
+  /** Последний момент акции, время московское */
+  until: '2026-12-25T23:59:59+03:00',
+  name: { ru: 'Новогодний старт', en: 'New Year start' },
+  /** На что действует, по рынкам */
+  services: { ru: ['mapsSetup', 'mapsPhotos', 'landing', 'botLeads'], intl: [] } as Record<Market, ServiceId[]>,
+  packages: { ru: ['card', 'start'], intl: [] } as Record<Market, PackageId[]>,
+};
+
+/** Акция идёт сейчас (на момент сборки — в браузере это перепроверяется) */
+export const promoActive = (market: Market, now = Date.now()) =>
+  PROMO.enabled && now <= Date.parse(PROMO.until) && (PROMO.services[market].length > 0 || PROMO.packages[market].length > 0);
+
+/** Цена со скидкой, округлённая до 10 ₽ / $1 вниз */
+export const promoValue = (v: number, market: Market) => {
+  const x = (v * (100 - PROMO.percent)) / 100;
+  return market === 'ru' ? Math.floor(x / 10) * 10 : Math.floor(x);
+};
+
 /** Пакет с бейджем «Оптимальный старт» */
 export const RECOMMENDED_PACKAGE: PackageId = 'start';
 

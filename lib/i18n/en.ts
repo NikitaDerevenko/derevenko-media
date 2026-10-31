@@ -585,6 +585,16 @@ export const en: Dict = {
       },
     ],
   },
+  promo: {
+    title: '{name}: {percent}% off',
+    text: 'Selected services are {percent}% off when ordered before {date}.',
+    left: 'Offer ends in',
+    days: 'days',
+    hours: 'hrs',
+    minutes: 'min',
+    terms: '“{name}” offer: {percent}% off marked services and packages for contracts signed by {date} inclusive. Ad budget and third-party services are not discounted. The final price is set in the contract.',
+    badge: '−{percent}%',
+  },
   bento: {
     title: 'What you get in the free audit',
     sub: 'I look at your listing, ads or website the way a customer does — and send you what is costing you leads.',

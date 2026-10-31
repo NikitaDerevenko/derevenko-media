@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { getDict } from '@/lib/i18n';
-import { HOME_DIRECTIONS, marketOf, showPrices, type Locale } from '@/lib/site';
+import { fill, getDict } from '@/lib/i18n';
+import { HOME_DIRECTIONS, marketOf, PROMO, promoActive, showPrices, type Locale } from '@/lib/site';
+import { PromoBanner } from '../promo';
 import { DirectionPrices } from '../price-cards';
 import { Tabs } from '../tabs';
 import { Section, SectionHead } from '../ui';
@@ -9,12 +10,21 @@ import { Section, SectionHead } from '../ui';
 export function PricingSection({ locale }: { locale: Locale; num?: string }) {
   const dict = getDict(locale);
   const t = dict.pricing;
-  const visible = showPrices(marketOf(locale));
+  const market = marketOf(locale);
+  const visible = showPrices(market);
+  // тексты акции с подставленными названием, процентом и датой
+  const date = new Intl.DateTimeFormat(locale === 'ru' ? 'ru-RU' : 'en-GB', { day: 'numeric', month: 'long', timeZone: 'Europe/Moscow' }).format(new Date(PROMO.until));
+  const vars = { name: PROMO.name[locale], percent: String(PROMO.percent), date };
+  const pc = dict.promo;
+  const promo = promoActive(market)
+    ? { title: fill(pc.title, vars), text: fill(pc.text, vars), left: pc.left, days: pc.days, hours: pc.hours, minutes: pc.minutes, terms: fill(pc.terms, vars) }
+    : null;
   return (
     <Section id="pricing" tone="surface">
       {/* старые ссылки вида /ru#services ведут сюда же */}
       <span id="services" className="block" aria-hidden="true" />
       <SectionHead title={dict.nav.pricing} sub={t.sub} />
+      {promo && <PromoBanner until={PROMO.until} copy={promo} />}
       <Tabs
         id="prices"
         goalPrefix="price_tab_"
@@ -38,6 +48,7 @@ export function PricingSection({ locale }: { locale: Locale; num?: string }) {
           <li key={n}>{n}</li>
         ))}
         <li>{dict.directions.websites.page.extra[0]}</li>
+        {promo && <li>{promo.terms}</li>}
       </ul>
     </Section>
   );
