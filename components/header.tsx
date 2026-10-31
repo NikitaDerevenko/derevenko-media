@@ -18,7 +18,9 @@ export function Header({ missingInOther = [] }: { missingInOther?: string[] }) {
   const other = locale === 'ru' ? 'en' : 'ru';
   // работа, которой нет в другой версии (например, решение только для EN), — ведём на главную другой версии
   const slug = pathname.match(/\/projects\/([^/]+)/)?.[1];
-  const otherPath = slug && missingInOther.includes(slug) ? `/${other}` : pathname.replace(/^\/(ru|en)(?=\/|$)/, `/${other}`);
+  // статьи есть только на русском — из них переключаем на главную другой версии
+  const onlyHere = (slug && missingInOther.includes(slug)) || /\/stati(\/|$)/.test(pathname);
+  const otherPath = onlyHere ? `/${other}` : pathname.replace(/^\/(ru|en)(?=\/|$)/, `/${other}`);
   const home = `/${locale}`;
 
   useEffect(() => setOpen(false), [pathname]);

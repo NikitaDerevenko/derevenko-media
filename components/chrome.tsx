@@ -37,6 +37,11 @@ export function Footer() {
           <span className="text-muted">{dict.footer.hours}</span>
         </div>
         <nav aria-label={dict.footer.terms} className="flex flex-col gap-2 text-[14px] text-muted">
+          {locale === 'ru' && (
+            <Link prefetch={false} href="/ru/stati" className="hover:text-ink">
+              {dict.footer.articles}
+            </Link>
+          )}
           {(['privacy', 'consent', 'terms', 'refund'] as const).map((id) => (
             <Link key={id} prefetch={false} href={`/${locale}/${id}`} className="hover:text-ink">
               {dict.footer[id]}

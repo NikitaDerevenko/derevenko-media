@@ -585,6 +585,15 @@ export const en: Dict = {
       },
     ],
   },
+  articles: {
+    title: 'Articles',
+    sub: 'Practical notes on ads, map listings and websites for small businesses.',
+    home: 'Useful reading for business owners',
+    all: 'All articles',
+    more: 'More articles',
+    ctaTitle: 'Want me to look at your case?',
+    ctaText: 'Send a link to your listing, website or ads — I’ll review it for free within 24 hours on business days.',
+  },
   promo: {
     title: '{name}: {percent}% off',
     text: 'Selected services are {percent}% off when ordered before {date}.',
@@ -650,6 +659,7 @@ export const en: Dict = {
     age: '0+',
     hours: 'Mon–Fri, 8 am–6 pm Moscow time',
     messengers: 'WhatsApp, Telegram, MAX',
+    articles: 'Articles',
     requisites: '{name} · self-employed (Russian professional income tax) · Tax ID (INN) {inn}',
     checkStatus: 'Check status with the tax service',
     notOffer: 'Nothing on this site is a public offer.',

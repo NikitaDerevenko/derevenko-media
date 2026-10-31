@@ -3,6 +3,8 @@ import { DEMO_BOTS, SITE, TELEGRAM_URL, type Locale } from '@/lib/site';
 import { LeadForm } from '../lead-form';
 import { TrackedLink } from '../tracked-link';
 import Image from 'next/image';
+import Link from 'next/link';
+import { ARTICLES } from '@/lib/articles';
 import { publicFileExists } from '../project-cards';
 import { Tabs } from '../tabs';
 import { Check, Section, SectionHead, TelegramIcon, btn, cx } from '../ui';
@@ -176,6 +178,24 @@ export function FaqSection({ locale }: { locale: Locale; num?: string }) {
               @{SITE.telegram}
             </TrackedLink>
           </p>
+          {/* ссылки на статьи — с главной, чтобы поиск их нашёл (только RU) */}
+          {locale === 'ru' && (
+            <nav aria-label={dict.articles.home} className="mt-8 border-t border-line pt-6">
+              <p className="text-[15px] font-semibold">{dict.articles.home}</p>
+              <ul className="mt-3 space-y-2.5">
+                {ARTICLES.slice(0, 4).map((a) => (
+                  <li key={a.slug}>
+                    <Link prefetch={false} href={`/ru/stati/${a.slug}`} className="text-[15px] leading-snug text-ink/85 hover:text-accent">
+                      {a.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+              <Link prefetch={false} href="/ru/stati" className="mt-3 inline-block text-[15px] font-semibold text-accent hover:underline">
+                {dict.articles.all}
+              </Link>
+            </nav>
+          )}
         </div>
         <FaqList items={t.items} />
       </div>
