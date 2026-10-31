@@ -1,15 +1,21 @@
 import Image from 'next/image';
 import { getDict } from '@/lib/i18n';
 import { ABOUT_PHOTO, type Locale } from '@/lib/site';
+import { HeadTracker } from '../head-tracker';
 import { publicFileExists } from '../project-cards';
 import { Section, SectionHead } from '../ui';
 
 const VIDEO = '/about/intro.mp4';
+/** Ракурсы для «смотрит на курсор»: public/about/head/h_{y}_{x}.webp, сетка 5×5. Пока их нет — обычное фото. */
+const HEAD = '/about/head/h_{y}_{x}.webp';
+const HEAD_GRID = 5;
 
 export function AboutSection({ locale }: { locale: Locale; num?: string }) {
   const t = getDict(locale).about;
   const hasPhoto = publicFileExists(ABOUT_PHOTO);
   const hasVideo = publicFileExists(VIDEO);
+  // включаем, только когда на месте все кадры сетки
+  const hasHead = Array.from({ length: HEAD_GRID * HEAD_GRID }, (_, i) => HEAD.replace('{x}', String(i % HEAD_GRID)).replace('{y}', String(Math.floor(i / HEAD_GRID)))).every(publicFileExists);
 
   return (
     <Section id="about" tone="surface">
@@ -17,7 +23,9 @@ export function AboutSection({ locale }: { locale: Locale; num?: string }) {
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.7fr)_minmax(0,1.3fr)] lg:gap-16">
         <div>
           <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-2xl bg-bg lg:mx-0">
-            {hasPhoto ? (
+            {hasHead ? (
+              <HeadTracker pattern={HEAD} grid={HEAD_GRID} alt={t.photoAlt} className="absolute inset-0" />
+            ) : hasPhoto ? (
               <Image src={ABOUT_PHOTO} alt={t.photoAlt} fill sizes="(min-width: 1024px) 384px, 90vw" className="object-cover" />
             ) : (
               // заглушка до появления настоящего фото: инициалы в фирменном цвете
