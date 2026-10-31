@@ -52,14 +52,16 @@ function rateLimited(ip) {
 async function storeCopy(record, context) {
   const bucket = process.env.LEADS_BUCKET;
   const token = context && context.token && context.token.access_token;
-  if (!bucket || !token) return false;
+  if (!bucket) throw new Error('LEADS_BUCKET не задан');
+  if (!token) throw new Error('у функции нет сервисного аккаунта');
   const key = `leads/${record.receivedAt.slice(0, 10)}/${record.receivedAt}-${Math.random().toString(36).slice(2, 8)}.json`;
   const res = await fetch(`https://storage.yandexcloud.net/${bucket}/${key}`, {
     method: 'PUT',
     headers: { 'X-YaCloud-SubjectToken': token, 'Content-Type': 'application/json' },
     body: JSON.stringify(record),
+    signal: AbortSignal.timeout(3000), // не держим заявку, если хранилище не отвечает
   });
-  if (!res.ok) throw new Error(`storage ${res.status}`);
+  if (!res.ok) throw new Error(`storage ${res.status} ${(await res.text()).slice(0, 150)}`);
   return true;
 }
 
@@ -110,9 +112,11 @@ module.exports.handler = async function handler(event, context) {
 
   // копия заявки в России — до передачи в Telegram
   let stored = false;
+  let storeError = '';
   try {
     stored = await storeCopy({ receivedAt, type, market, locale, direction, link, name, contact, message, page, utm: Object.fromEntries(utm), consent: true }, context);
   } catch (e) {
+    storeError = String((e && e.message) || e).slice(0, 200);
     console.error('[lead] не удалось сохранить копию заявки', e);
   }
 
@@ -136,7 +140,7 @@ module.exports.handler = async function handler(event, context) {
   const chatId = process.env.TELEGRAM_CHAT_ID;
   if (!token || !chatId) {
     console.error('[lead] TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID не заданы');
-    return reply(stored ? 200 : 503, stored ? { ok: true, delivered: false } : { ok: false, error: 'not_configured' }, origin);
+    return reply(stored ? 200 : 503, stored ? { ok: true, delivered: false } : { ok: false, error: 'not_configured', storeError }, origin);
   }
 
   try {
@@ -144,12 +148,15 @@ module.exports.handler = async function handler(event, context) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+      signal: AbortSignal.timeout(5000),
     });
-    if (!res.ok) throw new Error(`telegram ${res.status}`);
-    return reply(200, { ok: true, delivered: true }, origin);
+    if (!res.ok) throw new Error(`telegram ${res.status} ${(await res.text()).slice(0, 200)}`);
+    return reply(200, { ok: true, delivered: true, stored, ...(stored ? {} : { storeError }) }, origin);
   } catch (e) {
     console.error('[lead] не удалось отправить в Telegram', e);
     // копия сохранена — заявка не потеряна, человеку показываем успех
-    return reply(stored ? 200 : 502, stored ? { ok: true, delivered: false } : { ok: false, error: 'delivery_failed' }, origin);
+    // в ответе — короткая причина (без секретов), чтобы можно было разобраться без логов
+    const why = String((e && e.message) || e).replace(token, '***').slice(0, 200);
+    return reply(stored ? 200 : 502, stored ? { ok: true, delivered: false, why } : { ok: false, error: 'delivery_failed', why, storeError }, origin);
   }
 };
