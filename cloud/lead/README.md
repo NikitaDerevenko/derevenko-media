@@ -13,7 +13,7 @@
    роль `storage.uploader`.
 3. **Функция.** Cloud Functions → Создать функцию `lead` → Редактор → среда **Node.js 22**,
    способ — «Редактор кода», файл `index.js` — вставить содержимое `cloud/lead/index.js`.
-   Точка входа: `index.handler`. Таймаут 10 с, память 128 МБ.
+   Точка входа: `index.handler`. Таймаут 30 с, память 128 МБ.
    Сервисный аккаунт — `lead-function`.
    Переменные окружения:
    - `TELEGRAM_BOT_TOKEN` — токен бота от @BotFather (новый, после `/revoke`);

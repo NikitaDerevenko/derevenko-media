@@ -148,7 +148,7 @@ module.exports.handler = async function handler(event, context) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true }),
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(20000), // из облака в РФ Telegram бывает медленным
     });
     if (!res.ok) throw new Error(`telegram ${res.status} ${(await res.text()).slice(0, 200)}`);
     return reply(200, { ok: true, delivered: true, stored, ...(stored ? {} : { storeError }) }, origin);
