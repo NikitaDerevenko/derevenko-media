@@ -49,7 +49,20 @@ export function Header({ missingInOther = [] }: { missingInOther?: string[] }) {
             scrolled && !open ? 'h-14 max-w-[1080px] rounded-full border border-line bg-bg/85 pl-5 pr-2 shadow-soft backdrop-blur-md' : 'container h-[68px]',
           )}
         >
-          <Link prefetch={false} href={home} aria-label={dict.brand.name}>
+          <Link
+            prefetch={false}
+            href={home}
+            aria-label={dict.brand.name}
+            onClick={(e) => {
+              // уже на главной — плавно наверх и убираем #якорь из адреса
+              if (pathname === home || pathname === `${home}/`) {
+                e.preventDefault();
+                setOpen(false);
+                window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+                if (window.location.hash) history.replaceState(null, '', home + window.location.search);
+              }
+            }}
+          >
             <Logo name={dict.brand.name} />
           </Link>
 
