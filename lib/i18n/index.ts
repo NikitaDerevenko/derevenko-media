@@ -15,7 +15,9 @@ export function getDict(locale: Locale): Dict {
 
 /** В браузер уходят только тексты интерактивных частей — остальное рисуется на сервере */
 const CLIENT_KEYS = [
-  'brand','nav', 'langSwitch', 'common', 'hero', 'beforeAfter', 'audit', 'contact', 'cookie', 'footer', 'sticky', 'consentField'] as const;
+  'brand',
+  'miniAudit',
+  'nav', 'langSwitch', 'common', 'hero', 'beforeAfter', 'audit', 'contact', 'cookie', 'footer', 'sticky', 'consentField'] as const;
 export type ClientDict = Pick<Dict, (typeof CLIENT_KEYS)[number]>;
 
 export function clientDict(dict: Dict): ClientDict {

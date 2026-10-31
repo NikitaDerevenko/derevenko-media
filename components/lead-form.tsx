@@ -10,6 +10,16 @@ import { TrackedLink } from './tracked-link';
 import { Arrow, btn, Check, cx } from './ui';
 
 type Variant = 'audit' | 'contact';
+
+/** Ответы экспресс-разбора (ниша, город, что есть) — дописываются в заявку на разбор */
+function miniAuditContext() {
+  try {
+    const v = sessionStorage.getItem('mini-audit');
+    return v ? `Экспресс-разбор: ${v}` : '';
+  } catch {
+    return '';
+  }
+}
 type Status = 'idle' | 'sending' | 'success' | 'error';
 type Field = 'link' | 'contact' | 'message' | 'consent';
 type Errors = Partial<Record<Field, string>>;
@@ -68,7 +78,7 @@ export function LeadForm({ variant, defaultDirection }: { variant: Variant; defa
           type: variant,
           link: values.link,
           contact: values.contact,
-          message: values.message,
+          message: variant === 'audit' ? miniAuditContext() : values.message,
           direction: variant === 'contact' ? c.fields.directionOptions[values.direction as keyof typeof c.fields.directionOptions] : undefined,
           consent, // отметка согласия на обработку ПД
           company: values.company, // ловушка для спам-ботов

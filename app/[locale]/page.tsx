@@ -1,5 +1,6 @@
 import { Hero } from '@/components/hero';
 import { AboutSection } from '@/components/sections/about';
+import { MiniAuditSection } from '@/components/sections/mini-audit';
 import { BotsSection, FaqSection, StartSection } from '@/components/sections/leads';
 import { PricingSection } from '@/components/sections/pricing';
 import { ProjectsSection } from '@/components/sections/projects';
@@ -17,6 +18,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
   return (
     <>
       <Hero locale={locale} />
+      {/* экспресс-разбор: советы написаны под российские площадки, поэтому только в RU */}
+      {locale === 'ru' && <MiniAuditSection />}
       <ProjectsSection locale={locale} />
       <AboutSection locale={locale} />
       <TestimonialsSection locale={locale} />
