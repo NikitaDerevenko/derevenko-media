@@ -12,6 +12,8 @@ export type Goal =
   | `project_open_${string}`
   | 'before_after_drag'
   | 'click_telegram'
+  | 'click_max'
+  | 'click_whatsapp'
   | 'click_email'
   | 'market_switch'
   | 'lang_switch'

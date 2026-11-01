@@ -16,7 +16,7 @@ import { TrackedLink } from '@/components/tracked-link';
 import { homeCopy } from '@/lib/home';
 import { fill, getDict } from '@/lib/i18n';
 import { promoPrice, servicePrice } from '@/lib/pricing';
-import { ABOUT_PHOTO, marketOf, PROMO, promoActive, REVIEWS_URL, SITE, TELEGRAM_URL, type Locale } from '@/lib/site';
+import { ABOUT_PHOTO, MAX_URL, marketOf, PROMO, promoActive, REVIEWS_URL, SITE, TELEGRAM_URL, WHATSAPP_URL, type Locale } from '@/lib/site';
 
 const HEAD = '/about/head/h_{y}_{x}.webp';
 const HEAD_GRID = 5;
@@ -392,9 +392,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: L
                 <TrackedLink goalName="click_telegram" href={TELEGRAM_URL}>
                   Telegram
                 </TrackedLink>
-                <a href={`https://wa.me/${SITE.phoneDigits}`} target="_blank" rel="noopener">
+                <TrackedLink goalName="click_max" href={MAX_URL}>
+                  MAX
+                </TrackedLink>
+                <TrackedLink goalName="click_whatsapp" href={WHATSAPP_URL}>
                   WhatsApp
-                </a>
+                </TrackedLink>
                 {SITE.email && (
                   <TrackedLink goalName="click_email" href={`mailto:${SITE.email}`}>
                     {SITE.email}

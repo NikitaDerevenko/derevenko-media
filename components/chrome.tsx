@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { goal, hit, readConsent, writeConsent, YM_ID, type Consent } from '@/lib/metrika';
 import { fill } from '@/lib/i18n/helpers';
-import { LEGAL, SITE, TELEGRAM_URL } from '@/lib/site';
+import { LEGAL, MAX_URL, SITE, TELEGRAM_URL, WHATSAPP_URL } from '@/lib/site';
 import { useApp } from './providers';
 import { TrackedLink } from './tracked-link';
 import { btn, cx, Logo } from './ui';
@@ -24,6 +24,14 @@ export function Footer() {
           <TrackedLink goalName="click_telegram" href={TELEGRAM_URL} className="font-semibold hover:text-accent">
             Telegram: @{SITE.telegram}
           </TrackedLink>
+          <span className="flex gap-4">
+            <TrackedLink goalName="click_max" href={MAX_URL} className="font-semibold hover:text-accent">
+              MAX
+            </TrackedLink>
+            <TrackedLink goalName="click_whatsapp" href={WHATSAPP_URL} className="font-semibold hover:text-accent">
+              WhatsApp
+            </TrackedLink>
+          </span>
           {SITE.phone && (
             <span>
               <span className="font-semibold">{SITE.phone}</span> <span className="text-muted">— {dict.footer.messengers}</span>

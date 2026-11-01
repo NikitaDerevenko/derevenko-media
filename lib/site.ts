@@ -35,6 +35,9 @@ export const SITE = {
 };
 
 export const TELEGRAM_URL = `https://t.me/${SITE.telegram}`;
+/** Профиль в MAX и чат в WhatsApp — клиент пишет сам (автоматическая доставка заявок туда невозможна) */
+export const MAX_URL = 'https://max.ru/u/f9LHodD0cOKvo2F_IeqHT3dGCEdkC7r9TdZKbN_BJ-p43CDM7y5q2sTBQa0';
+export const WHATSAPP_URL = `https://wa.me/${SITE.phoneDigits}`;
 
 /** Куда форма отправляет заявки: функция в Яндекс Облаке (cloud/lead). Пусто — форма предложит написать в Telegram. */
 export const LEAD_URL = process.env.NEXT_PUBLIC_LEAD_URL || '';
