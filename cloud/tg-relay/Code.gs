@@ -39,3 +39,25 @@ function doPost(e) {
 function json(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
 }
+
+/**
+ * Оформление профиля бота: имя, описание и короткое описание.
+ * Запускать вручную из редактора (выбрать setupBotProfile → «Выполнить»). Результат — в журнале выполнения.
+ */
+function setupBotProfile() {
+  var token = PropertiesService.getScriptProperties().getProperty('TOKEN');
+  var calls = [
+    ['setMyName', { name: 'Заявки · Никита Деревенко' }],
+    ['setMyShortDescription', { short_description: 'Заявки с сайта derevenko-media.ru' }],
+    ['setMyDescription', { description: 'Сюда приходят заявки с сайта derevenko-media.ru: имя, контакт, задача и откуда пришёл клиент. Кнопки под сообщением сразу открывают чат с ним в Telegram или WhatsApp.' }],
+  ];
+  calls.forEach(function (c) {
+    var res = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/' + c[0], {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(c[1]),
+      muteHttpExceptions: true,
+    });
+    Logger.log(c[0] + ': ' + res.getResponseCode() + ' ' + res.getContentText().slice(0, 200));
+  });
+}
