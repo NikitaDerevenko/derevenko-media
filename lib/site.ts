@@ -52,7 +52,7 @@ export const LEGAL = {
   /** Сервис ФНС «Проверить статус самозанятого» */
   checkUrl: 'https://npd.nalog.ru/check-status/',
   /** Дата редакции юридических документов */
-  updated: { ru: '30 октября 2026 года', en: '30 October 2026' },
+  updated: { ru: '1 ноября 2026 года', en: '1 November 2026' },
 };
 
 /** false — в проектах выводится clientAnonymous, true — clientName (только с разрешения клиентов). */

@@ -675,7 +675,7 @@ export const en: Dict = {
     sections: [
       {
         h: 'Who processes your data',
-        p: ['The personal data operator is {name}, a self-employed professional (Russian professional income tax), tax ID (INN) {inn}.', 'For any data question: Telegram {telegram}{email}.'],
+        p: ['The personal data operator is {name}, a self-employed professional (Russian professional income tax), tax ID (INN) {inn}.', 'The operator notified Roskomnadzor (the Russian data protection authority) of personal data processing on 1 November 2026, notification No. 100481835.', 'For any data question: Telegram {telegram}{email}.'],
       },
       {
         h: 'What data is processed',
