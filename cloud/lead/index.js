@@ -12,6 +12,7 @@
 //   LEADS_RATE_LIMIT    — сколько заявок с одного IP за 10 минут (по умолчанию 5)
 //   SMTP_USER / SMTP_PASS — Яндекс Почта и пароль приложения: запасной канал уведомлений на почту
 //   NOTIFY_EMAIL        — куда слать письма (по умолчанию SMTP_USER)
+//   TG_RELAY_URL / TG_RELAY_SECRET — посредник в Google Apps Script для Telegram (cloud/tg-relay), т. к. из РФ Telegram заблокирован
 // Для записи в бакет у функции должен быть сервисный аккаунт с ролью storage.uploader.
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', 'gclid'];
@@ -69,16 +70,37 @@ async function storeCopy(record, context) {
 
 function hideSecrets(msg) {
   let m = msg;
-  for (const k of ['TELEGRAM_BOT_TOKEN', 'SMTP_PASS']) if (process.env[k]) m = m.split(process.env[k]).join('***');
+  for (const k of ['TELEGRAM_BOT_TOKEN', 'SMTP_PASS', 'TG_RELAY_SECRET']) if (process.env[k]) m = m.split(process.env[k]).join('***');
   return m;
 }
 
 async function sendTelegram(text) {
+  // Из облака в РФ api.telegram.org заблокирован — шлём через посредника в Google Apps Script (cloud/tg-relay),
+  // если он задан; иначе напрямую.
+  const relay = process.env.TG_RELAY_URL;
+  if (relay) {
+    const res = await fetch(relay, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ secret: process.env.TG_RELAY_SECRET || '', text }),
+      redirect: 'follow',
+      signal: AbortSignal.timeout(12000),
+    });
+    const out = await res.text();
+    let data = {};
+    try {
+      data = JSON.parse(out);
+    } catch {
+      throw new Error(`relay ${res.status} ${out.slice(0, 120)}`);
+    }
+    if (!data.ok) throw new Error(`relay: ${data.error || data.code || 'error'}`);
+    return;
+  }
   const res = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true }),
-    signal: AbortSignal.timeout(8000), // из облака в РФ Telegram бывает недоступен — долго не ждём
+    signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) throw new Error(`telegram ${res.status} ${(await res.text()).slice(0, 200)}`);
 }
@@ -221,7 +243,7 @@ module.exports.handler = async function handler(event, context) {
   const plain = text.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   const subject = type === 'audit' ? 'Заявка на бесплатный разбор' : type === 'quiz' ? 'Квиз с сайта' : 'Новая заявка с сайта';
   const channels = [];
-  if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) channels.push(['telegram', sendTelegram(text)]);
+  if (process.env.TG_RELAY_URL || (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID)) channels.push(['telegram', sendTelegram(text)]);
   if (process.env.SMTP_USER && process.env.SMTP_PASS) channels.push(['email', sendEmail(subject, plain)]);
   if (!channels.length) {
     console.error('[lead] не задан ни один канал уведомлений (Telegram или почта)');
