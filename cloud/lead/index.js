@@ -10,6 +10,8 @@
 //   LEADS_BUCKET        — имя бакета Object Storage для копий заявок (необязательно, но нужно для 152-ФЗ)
 //   ALLOWED_ORIGINS     — с каких сайтов принимать заявки, через запятую (по умолчанию https://derevenko-media.ru)
 //   LEADS_RATE_LIMIT    — сколько заявок с одного IP за 10 минут (по умолчанию 5)
+//   SMTP_USER / SMTP_PASS — Яндекс Почта и пароль приложения: запасной канал уведомлений на почту
+//   NOTIFY_EMAIL        — куда слать письма (по умолчанию SMTP_USER)
 // Для записи в бакет у функции должен быть сервисный аккаунт с ролью storage.uploader.
 
 const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', 'gclid'];
@@ -63,6 +65,85 @@ async function storeCopy(record, context) {
   });
   if (!res.ok) throw new Error(`storage ${res.status} ${(await res.text()).slice(0, 150)}`);
   return true;
+}
+
+function hideSecrets(msg) {
+  let m = msg;
+  for (const k of ['TELEGRAM_BOT_TOKEN', 'SMTP_PASS']) if (process.env[k]) m = m.split(process.env[k]).join('***');
+  return m;
+}
+
+async function sendTelegram(text) {
+  const res = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+    signal: AbortSignal.timeout(8000), // из облака в РФ Telegram бывает недоступен — долго не ждём
+  });
+  if (!res.ok) throw new Error(`telegram ${res.status} ${(await res.text()).slice(0, 200)}`);
+}
+
+// Письмо через SMTP Яндекс Почты (smtp.yandex.ru:465, пароль приложения) — без сторонних библиотек
+function sendEmail(subject, body) {
+  const tls = require('node:tls');
+  const user = process.env.SMTP_USER;
+  const to = process.env.NOTIFY_EMAIL || user;
+  const b64 = (x) => Buffer.from(x, 'utf8').toString('base64');
+  const msg = [
+    `From: =?UTF-8?B?${b64('Сайт derevenko-media.ru')}?= <${user}>`,
+    `To: <${to}>`,
+    `Subject: =?UTF-8?B?${b64(subject)}?=`,
+    `Date: ${new Date().toUTCString()}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=utf-8',
+    'Content-Transfer-Encoding: base64',
+    '',
+    b64(body).replace(/(.{76})/g, '$1\r\n'),
+  ].join('\r\n');
+  const steps = [
+    null, // приветствие сервера
+    'EHLO derevenko-media.ru',
+    'AUTH LOGIN',
+    b64(user),
+    b64(process.env.SMTP_PASS),
+    `MAIL FROM:<${user}>`,
+    `RCPT TO:<${to}>`,
+    'DATA',
+    `${msg}\r\n.`,
+    'QUIT',
+  ];
+  return new Promise((resolve, reject) => {
+    const sock = tls.connect({ host: 'smtp.yandex.ru', port: 465, servername: 'smtp.yandex.ru' });
+    const timer = setTimeout(() => {
+      sock.destroy();
+      reject(new Error('smtp timeout'));
+    }, 8000);
+    let buf = '';
+    let i = 0;
+    const fail = (e) => {
+      clearTimeout(timer);
+      sock.destroy();
+      reject(e);
+    };
+    sock.on('error', fail);
+    sock.on('data', (chunk) => {
+      buf += chunk.toString('utf8');
+      // ждём последнюю строку ответа вида «250 ...» (не «250-...»)
+      const lines = buf.split('\r\n').filter(Boolean);
+      const last = lines[lines.length - 1] || '';
+      if (!/^\d{3} /.test(last)) return;
+      buf = '';
+      const code = Number(last.slice(0, 3));
+      if (code >= 400) return fail(new Error(`smtp ${last.slice(0, 120)}`));
+      i += 1;
+      if (i >= steps.length) {
+        clearTimeout(timer);
+        sock.end();
+        return resolve();
+      }
+      sock.write(`${steps[i]}\r\n`);
+    });
+  });
 }
 
 module.exports.handler = async function handler(event, context) {
@@ -136,27 +217,27 @@ module.exports.handler = async function handler(event, context) {
     .filter(Boolean)
     .join('\n');
 
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const chatId = process.env.TELEGRAM_CHAT_ID;
-  if (!token || !chatId) {
-    console.error('[lead] TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID не заданы');
+  // доставка: Telegram и почта параллельно; заявка доставлена, если дошло хоть куда-то
+  const plain = text.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  const subject = type === 'audit' ? 'Заявка на бесплатный разбор' : type === 'quiz' ? 'Квиз с сайта' : 'Новая заявка с сайта';
+  const channels = [];
+  if (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID) channels.push(['telegram', sendTelegram(text)]);
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) channels.push(['email', sendEmail(subject, plain)]);
+  if (!channels.length) {
+    console.error('[lead] не задан ни один канал уведомлений (Telegram или почта)');
     return reply(stored ? 200 : 503, stored ? { ok: true, delivered: false } : { ok: false, error: 'not_configured', storeError }, origin);
   }
-
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML', disable_web_page_preview: true }),
-      signal: AbortSignal.timeout(20000), // из облака в РФ Telegram бывает медленным
-    });
-    if (!res.ok) throw new Error(`telegram ${res.status} ${(await res.text()).slice(0, 200)}`);
-    return reply(200, { ok: true, delivered: true, stored, ...(stored ? {} : { storeError }) }, origin);
-  } catch (e) {
-    console.error('[lead] не удалось отправить в Telegram', e);
-    // копия сохранена — заявка не потеряна, человеку показываем успех
-    // в ответе — короткая причина (без секретов), чтобы можно было разобраться без логов
-    const why = String((e && e.message) || e).replace(token, '***').slice(0, 200);
-    return reply(stored ? 200 : 502, stored ? { ok: true, delivered: false, why } : { ok: false, error: 'delivery_failed', why, storeError }, origin);
-  }
+  const results = await Promise.allSettled(channels.map(([, p]) => p));
+  const via = channels.filter((_, i) => results[i].status === 'fulfilled').map(([n]) => n);
+  // короткие причины сбоев (без секретов) — чтобы разбираться без логов
+  const why = Object.fromEntries(
+    channels
+      .map(([n], i) => [n, results[i]])
+      .filter(([, r]) => r.status === 'rejected')
+      .map(([n, r]) => [n, hideSecrets(String((r.reason && r.reason.message) || r.reason)).slice(0, 200)]),
+  );
+  if (Object.keys(why).length) console.error('[lead] сбой доставки', why);
+  if (via.length) return reply(200, { ok: true, delivered: true, via, stored, ...(stored ? {} : { storeError }), ...(Object.keys(why).length ? { why } : {}) }, origin);
+  // копия сохранена — заявка не потеряна, человеку показываем успех
+  return reply(stored ? 200 : 502, stored ? { ok: true, delivered: false, why } : { ok: false, error: 'delivery_failed', why, storeError }, origin);
 };

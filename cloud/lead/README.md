@@ -19,7 +19,9 @@
    - `TELEGRAM_BOT_TOKEN` — токен бота от @BotFather (новый, после `/revoke`);
    - `TELEGRAM_CHAT_ID` — id чата для заявок;
    - `LEADS_BUCKET` — имя бакета из шага 1;
-   - `ALLOWED_ORIGINS` — `https://derevenko-media.ru,https://www.derevenko-media.ru`.
+   - `ALLOWED_ORIGINS` — `https://derevenko-media.ru,https://www.derevenko-media.ru`;
+   - `SMTP_USER` — адрес Яндекс Почты, `SMTP_PASS` — пароль приложения (id.yandex.ru → Безопасность → Пароли приложений → Почта),
+     `NOTIFY_EMAIL` — куда слать письма. Запасной канал: из Облака Telegram бывает недоступен, письмо приходит всегда.
 4. **Публичный доступ.** В обзоре функции включить «Публичная функция».
    Скопировать ссылку вида `https://functions.yandexcloud.net/d4e…`.
 5. **Сайт.** Вписать ссылку в `.env.production` → `NEXT_PUBLIC_LEAD_URL=…`, закоммитить в `main` —
