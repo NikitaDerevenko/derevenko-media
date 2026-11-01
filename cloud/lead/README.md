@@ -33,3 +33,9 @@
 `leads/ГГГГ-ММ-ДД/….json`. Если копия не сохранилась, в сообщении будет предупреждение.
 
 Бесплатного лимита Cloud Functions (1 млн вызовов в месяц) и Object Storage хватает с большим запасом.
+
+## Telegram через Google (обязательно для РФ)
+
+Из облака в России api.telegram.org заблокирован, поэтому сообщения идут через посредника в Google Apps Script —
+код в `cloud/tg-relay/Code.gs` (проект в аккаунте Google владельца, свойства TOKEN, CHAT_ID, SECRET).
+В функции: `TG_RELAY_URL` — адрес веб-приложения (…/exec), `TG_RELAY_SECRET` — тот же пароль, что SECRET в скрипте.
