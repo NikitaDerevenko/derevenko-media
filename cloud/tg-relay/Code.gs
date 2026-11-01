@@ -28,6 +28,7 @@ function doPost(e) {
       text: String(data.text || '').slice(0, 4000),
       parse_mode: 'HTML',
       disable_web_page_preview: true,
+      reply_markup: data.reply_markup || undefined,
     }),
     muteHttpExceptions: true,
   });

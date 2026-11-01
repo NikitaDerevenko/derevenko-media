@@ -74,7 +74,7 @@ function hideSecrets(msg) {
   return m;
 }
 
-async function sendTelegram(text) {
+async function sendTelegram(text, replyMarkup) {
   // Из облака в РФ api.telegram.org заблокирован — шлём через посредника в Google Apps Script (cloud/tg-relay),
   // если он задан; иначе напрямую.
   const relay = process.env.TG_RELAY_URL;
@@ -82,7 +82,7 @@ async function sendTelegram(text) {
     const res = await fetch(relay, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ secret: process.env.TG_RELAY_SECRET || '', text }),
+      body: JSON.stringify({ secret: process.env.TG_RELAY_SECRET || '', text, reply_markup: replyMarkup }),
       redirect: 'follow',
       signal: AbortSignal.timeout(12000),
     });
@@ -99,7 +99,7 @@ async function sendTelegram(text) {
   const res = await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true }),
+    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true, reply_markup: replyMarkup }),
     signal: AbortSignal.timeout(8000),
   });
   if (!res.ok) throw new Error(`telegram ${res.status} ${(await res.text()).slice(0, 200)}`);
@@ -223,27 +223,50 @@ module.exports.handler = async function handler(event, context) {
     console.error('[lead] не удалось сохранить копию заявки', e);
   }
 
+  // ---- оформление сообщения ----
+  const title = type === 'audit' ? '🔎 <b>Заявка на бесплатный разбор</b>' : type === 'quiz' ? '🧩 <b>Ответы квиза</b>' : '🔥 <b>Новая заявка с сайта</b>';
+  const when = new Date(receivedAt).toLocaleString('ru-RU', { timeZone: 'Europe/Moscow', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const utmMap = Object.fromEntries(utm);
+  const source = utmMap.utm_source
+    ? `${esc(utmMap.utm_source)}${utmMap.utm_medium ? ' / ' + esc(utmMap.utm_medium) : ''}${utmMap.utm_campaign ? ' · ' + esc(utmMap.utm_campaign) : ''}`
+    : utmMap.yclid
+      ? 'Яндекс Директ'
+      : 'прямой заход или поиск';
+  const line = '━━━━━━━━━━━━━━';
   const text = [
-    type === 'audit' ? '🔎 <b>Заявка на бесплатный разбор</b>' : type === 'quiz' ? '🧩 <b>Квиз «С чего начать»</b>' : '✉️ <b>Обсудить проект</b>',
-    `Тип: <code>${type}</code> · рынок: <code>${market}</code> · язык: <code>${locale}</code>`,
-    direction && `Направление: ${esc(direction)}`,
-    link && `Ссылка: ${esc(link)}`,
-    name && `Имя: ${esc(name)}`,
-    `Контакт: ${esc(contact)}`,
-    message && `${type === 'audit' ? 'Что беспокоит' : type === 'quiz' ? 'Ответы' : 'Сообщение'}: ${esc(message)}`,
-    page && `Страница: ${esc(page)}`,
-    utm.length ? `UTM: ${utm.map(([k, v]) => `${k}=${esc(v)}`).join(' · ')}` : 'UTM: —',
-    `Согласие на обработку ПД: да, ${receivedAt}`,
+    title,
+    line,
+    direction && `🧭 <b>Направление:</b> ${esc(direction)}`,
+    name && `👤 <b>Имя:</b> ${esc(name)}`,
+    `📞 <b>Контакт:</b> ${esc(contact)}`,
+    link && `🔗 <b>Ссылка:</b> ${esc(link)}`,
+    message && `\n💬 <b>${type === 'audit' ? 'Что беспокоит' : type === 'quiz' ? 'Ответы' : 'Задача'}:</b>\n<blockquote>${esc(message)}</blockquote>`,
+    line,
+    `🌐 ${page ? esc(page) : 'сайт'} · ${locale === 'en' ? '🇬🇧 EN' : '🇷🇺 RU'}`,
+    `📊 Источник: ${source}`,
+    `🕒 ${when} МСК`,
+    '✅ Согласие на обработку ПД получено',
     stored ? '' : '⚠️ Копия в хранилище не сохранена — проверьте LEADS_BUCKET',
   ]
     .filter(Boolean)
     .join('\n');
 
+  // кнопки «ответить» под сообщением: Telegram по @нику, WhatsApp по номеру
+  const buttons = [];
+  const tgUser = (contact.match(/(?:^|\s|t\.me\/)@?([A-Za-z][A-Za-z0-9_]{4,31})\b/) || [])[1];
+  if (/^@|t\.me\//.test(contact.trim()) && tgUser) buttons.push({ text: '💬 Написать в Telegram', url: `https://t.me/${tgUser}` });
+  const digits = contact.replace(/\D/g, '');
+  if (digits.length >= 10 && digits.length <= 15) {
+    const phone = digits.length === 11 && digits[0] === '8' ? '7' + digits.slice(1) : digits.length === 10 ? '7' + digits : digits;
+    buttons.push({ text: '🟢 Написать в WhatsApp', url: `https://wa.me/${phone}` });
+  }
+  const replyMarkup = buttons.length ? { inline_keyboard: [buttons] } : undefined;
+
   // доставка: Telegram и почта параллельно; заявка доставлена, если дошло хоть куда-то
-  const plain = text.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+  const plain = text.replace(/<\/?blockquote>/g, '').replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
   const subject = type === 'audit' ? 'Заявка на бесплатный разбор' : type === 'quiz' ? 'Квиз с сайта' : 'Новая заявка с сайта';
   const channels = [];
-  if (process.env.TG_RELAY_URL || (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID)) channels.push(['telegram', sendTelegram(text)]);
+  if (process.env.TG_RELAY_URL || (process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID)) channels.push(['telegram', sendTelegram(text, replyMarkup)]);
   if (process.env.SMTP_USER && process.env.SMTP_PASS) channels.push(['email', sendEmail(subject, plain)]);
   if (!channels.length) {
     console.error('[lead] не задан ни один канал уведомлений (Telegram или почта)');
